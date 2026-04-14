@@ -1,0 +1,46 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "slug": "aura-luxury",
+      "title": "Aura Luxury",
+      "topic": "Web Development",
+      "tileImage": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000"
+    },
+    {
+      "id": 2,
+      "slug": "elysian-space",
+      "title": "Elysian Space",
+      "topic": "Branding",
+      "tileImage": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000"
+    },
+    {
+      "id": 3,
+      "slug": "vortex-motion",
+      "title": "Vortex Motion",
+      "topic": "Motion & Animation",
+      "tileImage": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000"
+    },
+    {
+      "id": 4,
+      "slug": "lumina-archive",
+      "title": "Lumina Archive",
+      "topic": "Architectural Experiences",
+      "tileImage": "https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1000"
+    },
+    {
+      "id": 5,
+      "slug": "nova-horizon",
+      "title": "Nova Horizon",
+      "topic": "Web Development",
+      "tileImage": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1000"
+    },
+    {
+      "id": 6,
+      "slug": "eco-sphere",
+      "title": "Eco Sphere",
+      "topic": "Branding",
+      "tileImage": "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000"
+    }
+  ]
+}

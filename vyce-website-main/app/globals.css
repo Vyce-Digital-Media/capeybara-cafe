@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+  /* Defaulting to dark theme since it's a luxury dark site */
+  --background: #030303;
+  --foreground: #f4f4f5;
+  --primary-blue: #0044ff;
+  /* Accent Blue */
+  --muted-accent: #1e1e1e;
+  /* Muted card background */
+  --off-white: #e5e5e5;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary-blue);
+  --color-muted: var(--muted-accent);
+  --color-offwhite: var(--off-white);
+  --color-border: var(--border-color);
+
+  --font-sans: 'Satoshi', sans-serif;
+  --font-serif: 'Satoshi', sans-serif;
+  --font-mono: 'Satoshi', sans-serif;
+  --font-satoshi: 'Satoshi', sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Satoshi', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+  border-left: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+/* Fills the track *above* the thumb with a blue line */
+::-webkit-scrollbar-track-piece:start {
+  background: rgba(0, 68, 255, 0.2);
+  border: 4px solid var(--background);
+  /* Thin 2px filled line */
+  border-right: 4px solid var(--background);
+  background-clip: padding-box;
+  border-radius: 10px;
+}
+
+/* Fills the track *below* the thumb */
+::-webkit-scrollbar-track-piece:end {
+  background: transparent;
+  border-left: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 68, 255, 1);
+  border-radius: 10px;
+  border: 3px solid var(--background);
+  /* Makes the 10px scrollbar look 4px wide */
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 68, 255, 1);
+  border: 1.5px solid var(--background);
+  /* Scrollbar "grows" to 7px wide */
+  background-clip: padding-box;
+}
+
+/* Noise overlay utility */
+.noise-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Utility to hide scrollbar when using lenis if needed */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
