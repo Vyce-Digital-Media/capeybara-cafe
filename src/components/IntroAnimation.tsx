@@ -3,25 +3,22 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
-import Image from "next/image";
 
 gsap.registerPlugin(TextPlugin);
 
 interface Props { onComplete: () => void; }
 
 export function IntroAnimation({ onComplete }: Props) {
-  const containerRef  = useRef<HTMLDivElement>(null);
-  const overlayRef    = useRef<HTMLDivElement>(null);
-  const textGroupRef  = useRef<HTMLDivElement>(null);
-  const logoRef       = useRef<HTMLDivElement>(null);
-  const textRef       = useRef<HTMLDivElement>(null);
-  const taglineRef    = useRef<HTMLParagraphElement>(null);
-  const imageWrapRef  = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const textGroupRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const taglineRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.set([logoRef.current, taglineRef.current], { opacity: 0, y: 28 });
-      gsap.set(imageWrapRef.current, { clipPath: "circle(0% at 50% 45%)" });
 
       const tl = gsap.timeline();
 
@@ -45,12 +42,6 @@ export function IntroAnimation({ onComplete }: Props) {
       // Remove cursor then fade text ONLY
       tl.call(() => { textRef.current?.classList.remove("typing-cursor"); });
       tl.to([textRef.current, taglineRef.current], { opacity: 0, y: -30, duration: 0.6, ease: "power2.in" });
-
-      // Image circle reveal from centre
-      tl.to(imageWrapRef.current,
-        { clipPath: "circle(160% at 50% 45%)", duration: 1.6, ease: "power2.inOut" },
-        "-=0.2"
-      );
 
       // Logo flies to Navbar exactly
       tl.to(logoRef.current, {
@@ -77,7 +68,7 @@ export function IntroAnimation({ onComplete }: Props) {
           const src = logoRef.current!.getBoundingClientRect();
           return dest.width / src.width;
         }
-      }, "-=1.6");
+      }, "-=0.6");
 
       // Overlay fades — site becomes visible
       tl.to(overlayRef.current, {
@@ -85,7 +76,7 @@ export function IntroAnimation({ onComplete }: Props) {
         onComplete: () => {
           onComplete();
         },
-      }, "-=0.8");
+      }, "-=0.4");
     }, containerRef);
 
     return () => ctx.revert();
@@ -93,16 +84,6 @@ export function IntroAnimation({ onComplete }: Props) {
 
   return (
     <div ref={containerRef} className="fixed inset-0 z-[100] overflow-hidden">
-      {/* Image circle-reveal */}
-      <div ref={imageWrapRef} className="absolute inset-0" style={{ clipPath: "circle(0% at 50% 45%)" }}>
-        <img
-          src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&q=90"
-          alt="CapeyBara Cafe"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-ivory/70 mix-blend-multiply" />
-      </div>
-
       {/* Dark overlay */}
       <div ref={overlayRef} className="absolute inset-0 bg-ivory" />
 
@@ -130,9 +111,10 @@ export function IntroAnimation({ onComplete }: Props) {
 
         {/* Tagline */}
         <p ref={taglineRef} className="mt-5 text-gold text-[10px] md:text-xs tracking-[0.42em] uppercase font-body">
-          Café · Sorbet · More
+          Café · Coffee · More
         </p>
       </div>
     </div>
   );
 }
+
