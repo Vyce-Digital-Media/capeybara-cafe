@@ -8,9 +8,9 @@ import { motion } from "framer-motion";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Our Story", href: "/about" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Visit Us", href: "/visit" },
+  { label: "Our Story", href: "/#" },
+  { label: "Gallery", href: "/#" },
+  { label: "Visit Us", href: "/#" },
 ];
 
 export function Navbar() {
@@ -64,9 +64,10 @@ export function Navbar() {
 
           {/* View Menu button */}
           <Link
-            href="/menu"
+            href="https://drive.google.com/file/d/1_OMH4MZ6QWK_n1wl7evbGFPbVhBI27DH/view?fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnLfptwr8uBu3xebhfjYSlux0xbXEHSvIUT3BlPnZDxcGaNnSGiYq0Q_gJCWY_aem__9OcuIgoTxLE3wkyKqSLzA"
             id="nav-menu-btn"
             target="_blank"
+            rel="noopener noreferrer"
             className="group relative overflow-hidden bg-charcoal/5 border border-charcoal/10 text-[12px] tracking-[0.2em] uppercase font-body px-8 py-3.5 rounded-full flex items-center gap-2 transition-all duration-300 hover:bg-gold hover:text-white hover:border-gold hover:shadow-lg hover:shadow-gold/20 hover:scale-105 active:scale-100 whitespace-nowrap"
           >
             <span className="relative z-10 flex items-center gap-3 whitespace-nowrap">
