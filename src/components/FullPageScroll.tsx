@@ -41,8 +41,12 @@ export function FullPageScroll({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number | null>(null);
-  /** Prevents sub-step spam; updated on EVERY scroll event */
-  const lastScrollTime = useRef<number>(0);
+  /** Hard lock — true while a section transition animation is running */
+  const scrollLocked = useRef<boolean>(false);
+  /** Accumulated wheel delta for touchpad debouncing */
+  const accumDelta = useRef<number>(0);
+  /** Timer to reset accumulator when wheel events stop (touchpad lift) */
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const getSubSteps = (idx: number) => Math.max(1, sectionSubSteps[idx] ?? 1);
 
@@ -62,25 +66,28 @@ export function FullPageScroll({
     [total, isAnimating]
   );
 
+  /** Lock scroll for the animation duration + a small buffer */
+  const lockScroll = useCallback(() => {
+    scrollLocked.current = true;
+    // Unlock slightly after the animation finishes so the next gesture works
+    setTimeout(() => { scrollLocked.current = false; }, 1050);
+  }, []);
+
   /* ── Scroll-down logic ──────────────────────────────────────────── */
   const handleScrollDown = useCallback(() => {
-    if (isAnimating) return;
-    const now = Date.now();
-    if (now - lastScrollTime.current < 650) return;
-    lastScrollTime.current = now;
-
+    if (scrollLocked.current) return;
     const subSteps = getSubSteps(current);
     const subIdx = subIndexes[current];
 
     if (subIdx < subSteps - 1) {
-      // Consume one internal step
+      lockScroll();
       setSubIndexes((prev) => {
         const next = [...prev];
         next[current] = subIdx + 1;
         return next;
       });
     } else if (current < total - 1) {
-      // Advance to next outer section
+      lockScroll();
       setIsAnimating(true);
       setCurrent((c) => {
         const next = c + 1;
@@ -93,27 +100,23 @@ export function FullPageScroll({
       });
       setTimeout(() => setIsAnimating(false), 950);
     }
-  }, [isAnimating, current, subIndexes, total, sectionSubSteps]);
+  }, [current, subIndexes, total, sectionSubSteps, lockScroll]);
 
   /* ── Scroll-up logic ────────────────────────────────────────────── */
   const handleScrollUp = useCallback(() => {
-    if (isAnimating) return;
-    const now = Date.now();
-    if (now - lastScrollTime.current < 650) return;
-    lastScrollTime.current = now;
-
+    if (scrollLocked.current) return;
     const subIdx = subIndexes[current];
 
     if (subIdx > 0) {
-      // Step back within the section
+      lockScroll();
       setSubIndexes((prev) => {
         const next = [...prev];
         next[current] = subIdx - 1;
         return next;
       });
     } else if (current > 0) {
-      // Go back to previous outer section, landing on its LAST sub-step
       const prevSubSteps = getSubSteps(current - 1);
+      lockScroll();
       setIsAnimating(true);
       setCurrent((c) => {
         const next = c - 1;
@@ -126,19 +129,45 @@ export function FullPageScroll({
       });
       setTimeout(() => setIsAnimating(false), 950);
     }
-  }, [isAnimating, current, subIndexes, sectionSubSteps]);
+  }, [current, subIndexes, sectionSubSteps, lockScroll]);
 
   /* ── Wheel ──────────────────────────────────────────────────────── */
   useEffect(() => {
+    // Threshold before a gesture fires (px). Higher = less sensitive to tiny flicks.
+    const DELTA_THRESHOLD = 50;
+
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (e.deltaY > 0) handleScrollDown();
-      else handleScrollUp();
+
+      // Reset idle timer — accumulator clears when wheel events stop
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+      idleTimer.current = setTimeout(() => {
+        accumDelta.current = 0;
+      }, 80);
+
+      // While locked, drain the accumulated delta (swallow touchpad inertia)
+      if (scrollLocked.current) {
+        accumDelta.current = 0;
+        return;
+      }
+
+      accumDelta.current += e.deltaY;
+
+      if (Math.abs(accumDelta.current) >= DELTA_THRESHOLD) {
+        const direction = accumDelta.current > 0 ? "down" : "up";
+        accumDelta.current = 0; // reset immediately so next gesture starts fresh
+        if (direction === "down") handleScrollDown();
+        else handleScrollUp();
+      }
     };
+
     const el = containerRef.current;
     if (!el) return;
     el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
   }, [handleScrollDown, handleScrollUp]);
 
   /* ── Touch ──────────────────────────────────────────────────────── */

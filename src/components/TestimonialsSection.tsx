@@ -178,6 +178,13 @@ export function TestimonialsSection() {
           <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold/8 rounded-full blur-[120px]" />
         </div>
 
+        {/* ── Watermark (Behind Title) ─────────────────────── */}
+        <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none">
+          <p className="font-display text-[22vw] text-charcoal/[0.03] leading-none whitespace-nowrap">
+            CapeyBara
+          </p>
+        </div>
+
         {/* Section header */}
         <div ref={titleRef} className="text-center mb-6 px-6 relative z-10 pt-12 md:pt-30">
           <motion.h2

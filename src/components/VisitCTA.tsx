@@ -40,27 +40,22 @@ export function VisitCTA() {
         backgroundSize: "36px 36px",
       }} />
 
-      {/* Watermark */}
-      <div className="absolute inset-0 flex items-center justify-end overflow-hidden pointer-events-none select-none pr-4 opacity-60">
-        <motion.p
-          className="font-display text-[22vw] text-charcoal/[0.04] leading-none whitespace-nowrap"
-          initial={{ x: 60, opacity: 0 }}
-          animate={inView ? { x: 0, opacity: 1 } : {}}
-          transition={{ duration: 1.2, delay: 0.3 }}
-        >
-          Visit
-        </motion.p>
+      {/* ── Watermark (Behind Titles) ────────────────────── */}
+      <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none">
+        <p className="font-display text-[22vw] text-charcoal/[0.03] leading-none whitespace-nowrap">
+          CapeyBara
+        </p>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full">
-        <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full mt-10 md:mt-0">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-24 items-center">
 
           {/* Left — editorial text */}
           <div>
 
             <motion.h2
-              className="font-display font-light text-charcoal leading-[0.9] tracking-tight mb-8 mt-24"
-              style={{ fontSize: "clamp(3rem, 6vw, 5.5rem)" }}
+              className="font-display font-light text-charcoal leading-[0.9] tracking-tight mb-4 md:mb-8 md:mt-24"
+              style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
               initial={{ opacity: 0, y: 44 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.15, duration: 0.9 }}
@@ -71,7 +66,7 @@ export function VisitCTA() {
 
             {/* Info items */}
             <motion.dl
-              className="grid grid-cols-1 gap-4 mb-12"
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-2 md:gap-4 mb-6 md:mb-12"
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
               transition={{ delay: 0.3 }}
@@ -79,19 +74,19 @@ export function VisitCTA() {
               {INFO.map((row, i) => (
                 <motion.div
                   key={row.label}
-                  className="flex items-start gap-4 group p-3 rounded-2xl hover:bg-charcoal/[0.03] transition-colors duration-300"
+                  className="flex items-start gap-3 md:gap-4 group p-2 md:p-3 rounded-2xl hover:bg-charcoal/[0.03] transition-colors duration-300"
                   initial={{ opacity: 0, x: -20 }}
                   animate={inView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.35 + i * 0.08, duration: 0.6 }}
                 >
-                  <span className="text-lg mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-base md:text-lg mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                     {row.icon}
                   </span>
                   <div>
-                    <dt className="font-body text-[9px] tracking-[0.35em] uppercase text-stone mb-0.5">
+                    <dt className="font-body text-[8px] md:text-[9px] tracking-[0.2em] md:tracking-[0.35em] uppercase text-stone mb-0.5 mt-[2px] md:mt-0">
                       {row.label}
                     </dt>
-                    <dd className="font-body text-charcoal text-sm">{row.value}</dd>
+                    <dd className="font-body text-charcoal text-xs md:text-sm line-clamp-1 md:line-clamp-none">{row.value}</dd>
                   </div>
                 </motion.div>
               ))}
@@ -103,15 +98,15 @@ export function VisitCTA() {
               transition={{ delay: 0.7 }}
             >
               <Link
-                href="/visit"
+                href="/#"
                 id="visit-cta-btn"
-                className="group relative overflow-hidden mb-8 inline-flex items-center gap-3 bg-charcoal text-ivory text-[10px] tracking-[0.28em] uppercase px-12 py-4 rounded-full font-body shadow-[0_10px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] transition-all duration-500 hover:scale-105"
+                className="group relative overflow-hidden mb-6 md:mb-8 inline-flex items-center gap-2 md:gap-3 bg-charcoal text-ivory text-[9px] md:text-[10px] tracking-[0.28em] uppercase px-8 md:px-12 py-3 md:py-4 rounded-full font-body shadow-[0_10px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] transition-all duration-500 hover:scale-105"
               >
                 {/* Ripple fill */}
                 <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 rounded-full" />
                 <span className="relative z-10 font-semibold">Plan Your Visit</span>
                 <motion.span
-                  className="relative z-10 text-base"
+                  className="relative z-10 text-sm md:text-base"
                   animate={{ x: [0, 4, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 >
@@ -123,15 +118,14 @@ export function VisitCTA() {
 
           {/* Right — Map card */}
           <motion.div
-            className="relative rounded-3xl overflow-hidden border border-charcoal/[0.06] shadow-[0_30px_80px_rgba(0,0,0,0.08)] group"
-            style={{ height: "420px" }}
+            className="relative rounded-2xl md:rounded-3xl overflow-hidden border border-charcoal/[0.06] shadow-[0_30px_80px_rgba(0,0,0,0.08)] group h-[220px] md:h-[420px]"
             initial={{ opacity: 0, scale: 0.92, y: 30 }}
             animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
             transition={{ delay: 0.25, duration: 1 }}
           >
             {/* Corner accent */}
-            <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-gold/40 rounded-tl-3xl z-20 pointer-events-none" />
-            <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-gold/40 rounded-br-3xl z-20 pointer-events-none" />
+            <div className="absolute top-0 left-0 w-12 h-12 md:w-20 md:h-20 border-t-2 border-l-2 border-gold/40 rounded-tl-2xl md:rounded-tl-3xl z-20 pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-12 h-12 md:w-20 md:h-20 border-b-2 border-r-2 border-gold/40 rounded-br-2xl md:rounded-br-3xl z-20 pointer-events-none" />
 
             <iframe
               title="CapeyBara Café Location"
@@ -145,16 +139,16 @@ export function VisitCTA() {
             />
 
             {/* Bottom strip */}
-            <div className="absolute bottom-0 left-0 right-0 bg-ivory/95 backdrop-blur-sm px-6 py-4 flex items-center justify-between border-t border-charcoal/[0.05]">
+            <div className="absolute bottom-0 left-0 right-0 bg-ivory/95 backdrop-blur-sm px-4 py-3 md:px-6 md:py-4 flex items-center justify-between border-t border-charcoal/[0.05]">
               <div>
-                <p className="font-body text-charcoal text-xs font-semibold">CapeyBara Café</p>
-                <p className="font-body text-stone text-[10px] tracking-wide">Vesu, Surat · Gujarat</p>
+                <p className="font-body text-charcoal text-[10px] md:text-xs font-semibold">CapeyBara Café</p>
+                <p className="font-body text-stone text-[8px] md:text-[10px] tracking-wide">Vesu, Surat · Gujarat</p>
               </div>
               <a
                 href="https://maps.google.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/link font-body text-[9px] tracking-[0.2em] uppercase text-gold hover:text-charcoal transition-colors flex items-center gap-1"
+                className="group/link font-body text-[8px] md:text-[9px] tracking-[0.2em] uppercase text-gold hover:text-charcoal transition-colors flex items-center gap-1"
               >
                 Open Maps
                 <motion.span

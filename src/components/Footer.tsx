@@ -10,10 +10,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const EXPLORE = [
   { label: "Home", href: "#" },
-  { label: "Our Story", href: "#about" },
-  { label: "Menu", href: "#menu" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Visit Us", href: "#visit" },
+  { label: "Our Story", href: "#" },
+  { label: "Menu", href: "#" },
+  { label: "Gallery", href: "#" },
+  { label: "Visit Us", href: "#" },
 ];
 
 const SOCIALS = [
@@ -60,10 +60,10 @@ export function Footer() {
   }, { scope: footerRef });
 
   return (
-    <footer ref={footerRef} className="relative bg-ivory overflow-hidden">
+    <footer ref={footerRef} className="relative bg-ivory overflow-hidden h-full flex flex-col">
 
       {/* ── Animated gold top border ─────────────────────── */}
-      <div ref={goldLineRef} className="h-px bg-gold origin-center" />
+      <div ref={goldLineRef} className="h-px bg-gold origin-center shrink-0" />
 
       {/* ── Watermark ────────────────────────────────────── */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none">
@@ -72,11 +72,11 @@ export function Footer() {
         </p>
       </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-12 pt-10 pb-6">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center max-w-5xl mx-auto px-6 mt-12 lg:px-12 py-12">
 
         {/* ── Brand block — centred ─────────────────────────── */}
         <motion.div
-          className="flex flex-col items-center text-center mb-6 mt-22"
+          className="flex flex-col items-center text-center mb-10"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -87,8 +87,8 @@ export function Footer() {
             alt="CapeyBara"
             className="w-16 h-16 rounded-full mb-4 border border-gold/30 drop-shadow-[0_0_20px_rgba(212,168,83,0.35)]"
           />
-          <p className="font-display text-charcoal text-2xl mb-1">CapeyBara</p>
-          <p className="font-body text-gold text-[9px] tracking-[0.35em] uppercase mb-4">
+          <p className="font-display text-charcoal text-3xl mb-1">CapeyBara</p>
+          <p className="font-body text-gold text-[10px] tracking-[0.35em] uppercase mb-4">
             Café · Coffee · More
           </p>
           <p className="font-body text-stone text-sm leading-relaxed max-w-sm">
@@ -97,7 +97,7 @@ export function Footer() {
 
           {/* Gold divider */}
           <motion.div
-            className="h-px bg-gradient-to-r from-transparent via-gold to-transparent mt-6"
+            className="h-px bg-gradient-to-r from-transparent via-gold to-transparent mt-8"
             initial={{ width: 0 }}
             whileInView={{ width: "120px" }}
             viewport={{ once: true }}
@@ -105,18 +105,18 @@ export function Footer() {
           />
         </motion.div>
 
-        {/* ── Nav links — centred two-column ───────────────── */}
-        <div className="grid grid-cols-2 gap-x-12 gap-y-6 mb-8 justify-items-center">
+        {/* ── Nav links — centred columns ───────────────────── */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-12 sm:gap-24 mb-12 w-full">
 
           {/* Explore */}
           <motion.div
-            className="flex flex-col items-center gap-3"
+            className="flex flex-col items-center gap-3 min-w-[120px]"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.7 }}
           >
-            <p className="text-gold text-[9px] tracking-[0.42em] uppercase font-body mb-0.5">Explore</p>
+            <p className="text-gold text-[10px] tracking-[0.42em] uppercase font-body mb-0.5">Explore</p>
             <ul className="flex flex-col items-center gap-2">
               {EXPLORE.map((l) => (
                 <li key={l.label}>
@@ -130,13 +130,13 @@ export function Footer() {
 
           {/* Connect */}
           <motion.div
-            className="flex flex-col items-center gap-3"
+            className="flex flex-col items-center gap-3 min-w-[140px]"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.7 }}
           >
-            <p className="text-gold text-[9px] tracking-[0.42em] uppercase font-body mb-0.5">Connect</p>
+            <p className="text-gold text-[10px] tracking-[0.42em] uppercase font-body mb-0.5">Connect</p>
             <ul className="flex flex-col items-center gap-2">
               {SOCIALS.map((l) => (
                 <li key={l.label}>
@@ -169,10 +169,10 @@ export function Footer() {
         </div>
 
         {/* ── Divider ───────────────────────────────────────── */}
-        <div className="h-px bg-charcoal/10 mb-6" />
+        <div className="w-full max-w-md h-px bg-charcoal/5 mb-8" />
 
         {/* ── Bottom bar — centred ──────────────────────────── */}
-        <div className="flex flex-col items-center gap-1 text-center">
+        <div className="flex flex-col items-center gap-2 text-center opacity-80">
           <p className="font-body text-stone text-[10px] tracking-[0.18em]">
             © {new Date().getFullYear()} CapeyBara. All rights reserved.
           </p>

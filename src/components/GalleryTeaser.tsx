@@ -87,6 +87,12 @@ export function GalleryTeaser() {
 
   return (
     <section className="relative bg-ivory py-20 md:py-28 overflow-hidden h-screen">
+      {/* ── Watermark (Behind Title) ─────────────────────── */}
+      <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none">
+        <p className="font-display text-[22vw] text-charcoal/[0.03] leading-none whitespace-nowrap">
+          CapeyBara
+        </p>
+      </div>
       {/* Header */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
         <div>
@@ -101,7 +107,7 @@ export function GalleryTeaser() {
           </motion.h2>
         </div>
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          <Link href="/gallery" id="gallery-teaser-cta"
+          <Link href="/#" id="gallery-teaser-cta"
             className="group inline-flex items-center gap-2 font-body text-[10px] tracking-[0.22em] uppercase text-charcoal hover:text-gold border-b border-charcoal/20 hover:border-gold pb-1 transition-all duration-300">
             See All Photos
             <span className="transition-transform duration-300 group-hover:translate-x-2">→</span>
@@ -194,7 +200,7 @@ export function GalleryTeaser() {
 
       {/* CTA */}
       <div className="text-center mt-14 px-6">
-        <Link href="/gallery" id="gallery-full-cta"
+        <Link href="/#" id="gallery-full-cta"
           className="group inline-flex items-center gap-3 font-body text-[10px] tracking-[0.22em] uppercase border border-charcoal/15 hover:border-navy text-charcoal hover:text-navy px-10 py-4 rounded-full transition-all duration-300 hover:scale-105 hover:bg-navy/5">
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />

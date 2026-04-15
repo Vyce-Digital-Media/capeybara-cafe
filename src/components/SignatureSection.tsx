@@ -151,8 +151,14 @@ export function SignatureSection({ subStep = 0 }: SignatureSectionProps) {
   return (
     <section
       id="menu"
-      className="h-full w-full bg-ivory flex flex-col overflow-hidden border-y border-charcoal/[0.05]"
+      className="h-full w-full bg-ivory flex flex-col overflow-hidden border-y border-charcoal/[0.05] relative"
     >
+      {/* ── Watermark (Behind Titles) ────────────────────── */}
+      <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none">
+        <p className="font-display text-[22vw] text-charcoal/[0.03] leading-none whitespace-nowrap">
+          CapeyBara
+        </p>
+      </div>
       {/* ── Title ─────────────────────────────────────────────── */}
       <div className="flex-shrink-0 pt-14 pb-6 flex flex-col items-center text-center px-6">
         <motion.p
@@ -248,7 +254,7 @@ export function SignatureSection({ subStep = 0 }: SignatureSectionProps) {
       {/* ── CTA ───────────────────────────────────────────────── */}
       <div className="flex-shrink-0 pb-10 flex justify-center">
         <Link
-          href="/menu"
+          href="/#"
           id="sig-full-menu-cta"
           className="group relative overflow-hidden border border-charcoal/10 hover:border-gold bg-white text-charcoal text-[10px] tracking-[0.28em] uppercase px-10 py-4 rounded-full font-body transition-all duration-300 hover:scale-105 hover:bg-gold hover:text-white shadow-[0_10px_20px_rgba(0,0,0,0.05)]"
         >
