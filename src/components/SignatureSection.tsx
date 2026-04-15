@@ -113,7 +113,7 @@ function SignatureCard({
           className="pointer-events-none absolute -top-1/2 left-0 h-[200%] w-1/3 bg-gradient-to-r from-transparent via-charcoal/[0.03] to-transparent skew-x-[-25deg] z-0 group-hover:opacity-0 transition-opacity duration-500"
         />
 
-        <div className="relative z-10 flex flex-col md:flex-row gap-6 w-full items-center justify-between">
+        <div className="sig-content relative z-10 flex flex-col md:flex-row gap-6 w-full items-center justify-between">
           <div className="flex flex-col items-start gap-3 flex-1">
             <span className="font-display font-black text-[5rem] leading-none text-charcoal/[0.04] group-hover:text-white/[0.06] transition-colors duration-700 md:text-[6rem] absolute -top-4 -left-4 md:top-2 md:left-2 select-none">
               {item.num}
@@ -188,9 +188,7 @@ export function SignatureSection(_props: SignatureSectionProps) {
         scrub: 1, 
         onUpdate: (self) => {
           const idx = Math.min(ITEMS.length - 1, Math.floor(self.progress * ITEMS.length));
-          if (idx !== activeIndex) {
-            setActiveIndex(idx);
-          }
+          setActiveIndex(prev => prev !== idx ? idx : prev);
         }
       }
     });
@@ -200,8 +198,12 @@ export function SignatureSection(_props: SignatureSectionProps) {
       gsap.set(`.sig-card-${i}`, {
         yPercent: i === 0 ? 0 : 120 + i * 40,
         scale: 1,
-        opacity: i === 0 ? 1 : 0,
+        opacity: 1, 
         zIndex: i === 0 ? ITEMS.length : ITEMS.length - i,
+      });
+      // The first card should have text visible, others hidden initially
+      gsap.set(`.sig-card-${i} .sig-content`, {
+        opacity: i === 0 ? 1 : 0
       });
     });
 
@@ -222,24 +224,38 @@ export function SignatureSection(_props: SignatureSectionProps) {
         tl.to(`.sig-card-${j}`, {
           yPercent: dist * 18,
           scale: 1 + dist * 0.04,
-          opacity: Math.max(0.25, 1 + dist * 0.25),
+          opacity: 1, 
           duration: 1,
           ease: "power1.inOut"
         }, label);
+        
+        // FADE OUT previous text tightly to timeline
+        tl.to(`.sig-card-${j} .sig-content`, {
+          opacity: 0,
+          duration: 0.5,
+          ease: "power1.in"
+        }, label);
       }
 
-      // Draw incoming new card
+      // Draw incoming new card (already fully opaque background)
       tl.to(`.sig-card-${stepIndex}`, {
         yPercent: 0,
-        opacity: 1,
         duration: 1,
         ease: "power1.inOut"
       }, label);
+      
+      // Fade in new card's text
+      tl.to(`.sig-card-${stepIndex} .sig-content`, {
+        opacity: 1,
+        duration: 0.5,
+        ease: "power1.out"
+      }, `${label}+=0.3`);
     });
 
     return () => {
       gsap.ticker.remove((time) => { lenis.raf(time * 1000); });
       lenis.destroy();
+      tl.kill();
     };
   }, { scope: scrollContainerRef });
 

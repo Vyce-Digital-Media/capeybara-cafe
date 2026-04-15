@@ -145,12 +145,6 @@ export function StatsStrip() {
       {/* Ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gold/4 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* ── Watermark (Behind Title) ─────────────────────── */}
-      <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none">
-        <p className="font-display text-[22vw] text-charcoal/[0.07] leading-none whitespace-nowrap">
-          CapeyBara
-        </p>
-      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-8">
         {/* Section header */}

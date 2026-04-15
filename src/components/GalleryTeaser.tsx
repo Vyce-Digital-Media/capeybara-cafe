@@ -5,16 +5,24 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const GALLERY_ITEMS = [
-  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=85", alt: "Coffee flat-lay", type: "image" },
+  { src: "/1.jpg", alt: "Coffee flat-lay", type: "image" },
   { src: "/video1.mp4", alt: "Premium brewing", type: "video" },
-  { src: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=800&q=85", alt: "Warm cafe interior", type: "image" },
+  { src: "/2.jpg", alt: "Coffee flat-lay", type: "image" },
   { src: "/video2.mp4", alt: "Barista craft", type: "video" },
-  { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=85", alt: "Artisan desserts", type: "image" },
+  { src: "/3.jpg", alt: "Coffee flat-lay", type: "image" },
   { src: "/video3.mp4", alt: "Coffee details", type: "video" },
-  { src: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&q=85", alt: "Coffee beans", type: "image" },
-  { src: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=85", alt: "Pouring coffee", type: "image" },
-  { src: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&q=85", alt: "Café detail", type: "image" },
-  { src: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800&q=85", alt: "Café interior light", type: "image" },
+  { src: "/4.jpg", alt: "Coffee flat-lay", type: "image" },
+  { src: "/video4.mp4", alt: "Coffee details", type: "video" },
+  { src: "/5.jpg", alt: "Coffee flat-lay", type: "image" },
+  { src: "/video5.mp4", alt: "Coffee details", type: "video" },
+  { src: "/6.jpg", alt: "Coffee flat-lay", type: "image" },
+  { src: "/video6.mp4", alt: "Coffee details", type: "video" },
+  { src: "/7.jpg", alt: "Coffee flat-lay", type: "image" },
+  { src: "/8.jpg", alt: "Coffee flat-lay", type: "image" },
+  { src: "/9.jpg", alt: "Coffee flat-lay", type: "image" },
+  { src: "/10.jpg", alt: "Coffee flat-lay", type: "image" },
+  { src: "/11.jpg", alt: "Coffee flat-lay", type: "image" },
+  { src: "/12.jpg", alt: "Coffee flat-lay", type: "image" },
 ];
 
 export function GalleryTeaser() {
@@ -44,29 +52,33 @@ export function GalleryTeaser() {
     }
   }, [totalW]);
 
-  // Auto-drift
+  const [isHovered, setIsHovered] = useState(false);
+  const speedRef = useRef(2.2); // Normal optimal speed
+
+  // Unified loop for Auto-drift & Drag-momentum
   useEffect(() => {
     let raf: number;
-    const drift = () => {
+    const loop = () => {
       if (!isDragging.current) {
-        setOffset(offsetRef.current - 2.5);
+        if (Math.abs(velRef.current) > 0.5) {
+          // Apply inertia if there's velocity from dragging
+          velRef.current *= 0.94;
+          setOffset(offsetRef.current + velRef.current);
+        } else {
+          // Normal auto-drift
+          velRef.current = 0;
+          const targetSpeed = isHovered ? 0.8 : 2.2;
+          speedRef.current += (targetSpeed - speedRef.current) * 0.1; // Smooth interpolate speed
+          setOffset(offsetRef.current - speedRef.current);
+        }
       }
-      raf = requestAnimationFrame(drift);
+      raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(drift);
+    raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [setOffset]);
-
-  // Momentum after drag
-  const animateMomentum = useCallback(() => {
-    if (Math.abs(velRef.current) < 0.3) { velRef.current = 0; return; }
-    velRef.current *= 0.94;
-    setOffset(offsetRef.current + velRef.current);
-    rafRef.current = requestAnimationFrame(animateMomentum);
-  }, [setOffset]);
+  }, [isHovered, setOffset]);
 
   const onDown = (clientX: number) => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
     isDragging.current = true;
     startX.current = clientX - offsetRef.current;
     lastX.current = clientX;
@@ -82,17 +94,10 @@ export function GalleryTeaser() {
 
   const onUp = () => {
     isDragging.current = false;
-    rafRef.current = requestAnimationFrame(animateMomentum);
   };
 
   return (
     <section className="relative bg-ivory py-20 md:py-28 overflow-hidden h-screen">
-      {/* ── Watermark (Behind Title) ─────────────────────── */}
-      <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none">
-        <p className="font-display text-[22vw] text-charcoal/[0.07] leading-none whitespace-nowrap">
-          CapeyBara
-        </p>
-      </div>
       {/* Header */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
         <div>
@@ -122,7 +127,8 @@ export function GalleryTeaser() {
         onMouseDown={e => onDown(e.clientX)}
         onMouseMove={e => onMove(e.clientX)}
         onMouseUp={onUp}
-        onMouseLeave={onUp}
+        onMouseLeave={() => { setIsHovered(false); onUp(); }}
+        onMouseEnter={() => setIsHovered(true)}
         onTouchStart={e => onDown(e.touches[0].clientX)}
         onTouchMove={e => onMove(e.touches[0].clientX)}
         onTouchEnd={onUp}
