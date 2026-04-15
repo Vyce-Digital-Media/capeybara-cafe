@@ -299,20 +299,7 @@ export function FullPageScroll({
           );
         })}
 
-        {/* Numeric counter */}
-        <div
-          className="mt-3 flex flex-col items-center"
-          style={{ fontFamily: "var(--font-dm-sans), sans-serif", gap: 3 }}
-        >
-          <span style={{ fontSize: 9, letterSpacing: "0.15em", color: "rgba(212,168,83,0.9)", fontVariantNumeric: "tabular-nums" }}>
-            {String(current + 1).padStart(2, "0")}
-          </span>
-          <span style={{ width: 1, height: 13, background: "rgba(212,168,83,0.28)" }} />
-          <span style={{ fontSize: 9, letterSpacing: "0.15em", color: "rgba(212,168,83,0.38)", fontVariantNumeric: "tabular-nums" }}>
-            {String(total).padStart(2, "0")}
-          </span>
-        </div>
-      </nav>
+        </nav>
     </div>
   );
 }

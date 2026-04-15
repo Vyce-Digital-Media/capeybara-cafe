@@ -37,7 +37,7 @@ const ITEMS = [
     desc: "Double shot · Venezuelan cacao · smoked salt · orange zest. A complex dark chocolate experience with bright citrus notes.",
     price: "₹240",
     tag: "",
-    img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1200",
+    img: "/coffee2.jpg",
   },
 ];
 /* ────────────────────────────────────────────────────────────────── */

@@ -15,42 +15,70 @@ const IMAGES = [
     src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=85",
     alt: "Coffee flat-lay at CapeyBara",
     caption: "Every Detail, Deliberate",
-    tall: true,
+    type: "image",
+  },
+  {
+    id: 7,
+    src: "/video1.mp4",
+    alt: "Premium brewing",
+    caption: "The Perfect Pour",
+    type: "video",
   },
   {
     id: 2,
     src: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=800&q=85",
     alt: "Warm cafe interior",
     caption: "A Space to Breathe",
-    tall: false,
+    type: "image",
+  },
+  {
+    id: 8,
+    src: "/video2.mp4",
+    alt: "Barista craft",
+    caption: "Slow Bar Rituals",
+    type: "video",
   },
   {
     id: 3,
     src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=85",
     alt: "Artisan desserts",
     caption: "Sweet Indulgences",
-    tall: false,
+    type: "image",
+  },
+  {
+    id: 9,
+    src: "/video3.mp4",
+    alt: "Coffee details",
+    caption: "Freshly Roasted",
+    type: "video",
   },
   {
     id: 4,
     src: "https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=800&q=85",
     alt: "Barista crafting coffee",
     caption: "The Art of the Brew",
-    tall: false,
+    type: "image",
+  },
+  {
+    id: 10,
+    src: "/video4.mp4",
+    alt: "Coffee details",
+    caption: "Freshly Roasted",
+    type: "video",
   },
   {
     id: 5,
     src: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800&q=85",
     alt: "Fresh pastries",
     caption: "Baked with Heart",
-    tall: false,
+    type: "image",
   },
   {
     id: 6,
     src: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&q=85",
     alt: "Coffee beans close-up",
     caption: "From Source to Cup",
-    tall: false,
+    type: "image",
   },
 ];
 
@@ -108,13 +136,25 @@ export function GallerySection() {
               ref={(el) => { itemRefs.current[i] = el; }}
               className={`group relative overflow-hidden rounded-sm bg-cream-dark ${i === 0 ? "row-span-2" : ""}`}
             >
-              <Image
-                src={img.src}
-                alt={img.alt}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-108"
-                style={{ transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
-              />
+              {img.type === "video" ? (
+                <video
+                  src={img.src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-108"
+                  style={{ transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+                />
+              ) : (
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-108"
+                  style={{ transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+                />
+              )}
 
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-cream/0 group-hover:bg-cream/55 transition-all duration-500" />

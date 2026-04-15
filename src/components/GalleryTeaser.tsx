@@ -4,14 +4,17 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const IMAGES = [
-  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=85", alt: "Coffee flat-lay" },
-  { src: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=800&q=85", alt: "Warm cafe interior" },
-  { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=85", alt: "Artisan desserts" },
-  { src: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&q=85", alt: "Coffee beans" },
-  { src: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=85", alt: "Pouring coffee" },
-  { src: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&q=85", alt: "Café detail" },
-  { src: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800&q=85", alt: "Café interior light" },
+const GALLERY_ITEMS = [
+  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=85", alt: "Coffee flat-lay", type: "image" },
+  { src: "/video1.mp4", alt: "Premium brewing", type: "video" },
+  { src: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=800&q=85", alt: "Warm cafe interior", type: "image" },
+  { src: "/video2.mp4", alt: "Barista craft", type: "video" },
+  { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=85", alt: "Artisan desserts", type: "image" },
+  { src: "/video3.mp4", alt: "Coffee details", type: "video" },
+  { src: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&q=85", alt: "Coffee beans", type: "image" },
+  { src: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=85", alt: "Pouring coffee", type: "image" },
+  { src: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&q=85", alt: "Café detail", type: "image" },
+  { src: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800&q=85", alt: "Café interior light", type: "image" },
 ];
 
 export function GalleryTeaser() {
@@ -28,7 +31,7 @@ export function GalleryTeaser() {
   const CARD_W = 220;
   const CARD_MARGIN = 16;
   const STEP = CARD_W + CARD_MARGIN;
-  const totalW = IMAGES.length * STEP;
+  const totalW = GALLERY_ITEMS.length * STEP;
 
   const setOffset = useCallback((v: number) => {
     // Infinite loop: wrap around
@@ -132,8 +135,7 @@ export function GalleryTeaser() {
             willChange: "transform",
           }}
         >
-          {[...IMAGES, ...IMAGES, ...IMAGES].map((img, i) => {
-            const iIdx = i % IMAGES.length;
+          {[...GALLERY_ITEMS, ...GALLERY_ITEMS, ...GALLERY_ITEMS].map((item, i) => {
             const isHov = hoveredIdx === i;
             return (
               <div
@@ -150,17 +152,32 @@ export function GalleryTeaser() {
                 onMouseEnter={() => setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  draggable="false"
-                  className="w-full h-full object-cover pointer-events-none"
-                  style={{
-                    transform: isHov ? "scale(1.08)" : "scale(1)",
-                    transition: "transform 0.6s ease",
-                  }}
-                />
+                {item.type === "video" ? (
+                  <video
+                    src={item.src}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover pointer-events-none"
+                    style={{
+                      transform: isHov ? "scale(1.08)" : "scale(1)",
+                      transition: "transform 0.6s ease",
+                    }}
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    draggable="false"
+                    className="w-full h-full object-cover pointer-events-none"
+                    style={{
+                      transform: isHov ? "scale(1.08)" : "scale(1)",
+                      transition: "transform 0.6s ease",
+                    }}
+                  />
+                )}
                 {/* Hover overlay */}
                 <div
                   className="absolute inset-0 transition-opacity duration-500"

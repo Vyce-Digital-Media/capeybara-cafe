@@ -29,6 +29,8 @@ export function HeroSection() {
         />
         {/* Left-to-right cream fade so text on the left stays readable */}
         <div className="absolute inset-0 bg-gradient-to-r from-ivory/90 via-ivory/20 to-transparent" />
+        {/* White highlight gradient from the left (20% screen width) */}
+        <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-white to-transparent pointer-events-none" />
       </div>
 
       {/* ── Decorative thin vertical lines ────────────────── */}
