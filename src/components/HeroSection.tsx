@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const HERO_IMG = "/hero-premium.png";
+const HERO_IMG = "/hero_image.png";
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
