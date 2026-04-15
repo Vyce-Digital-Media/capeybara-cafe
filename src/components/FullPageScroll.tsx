@@ -137,6 +137,18 @@ export function FullPageScroll({
     const DELTA_THRESHOLD = 50;
 
     const onWheel = (e: WheelEvent) => {
+      const localScroll = (e.target as Element).closest(".signature-local-scroll") as HTMLElement;
+      if (localScroll) {
+        const isScrollingDown = e.deltaY > 0;
+        const reachedTop = localScroll.scrollTop <= 0;
+        const reachedBottom = localScroll.scrollTop + localScroll.clientHeight >= localScroll.scrollHeight - 1;
+
+        if ((isScrollingDown && !reachedBottom) || (!isScrollingDown && !reachedTop)) {
+          // Inside boundaries, allow native scroll
+          return;
+        }
+      }
+
       e.preventDefault();
 
       // Reset idle timer — accumulator clears when wheel events stop

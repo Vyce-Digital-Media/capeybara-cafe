@@ -31,13 +31,13 @@ export function CustomCursor() {
     const onEnter = () => {
       ring.style.width  = "56px";
       ring.style.height = "56px";
-      ring.style.borderColor = "#d4a853";
+      ring.style.borderColor = "#1a1a1a";
       ring.style.opacity = "0.9";
     };
     const onLeave = () => {
       ring.style.width  = "36px";
       ring.style.height = "36px";
-      ring.style.borderColor = "rgba(212,168,83,0.55)";
+      ring.style.borderColor = "rgba(26,26,26,0.55)";
       ring.style.opacity = "1";
     };
 
@@ -67,7 +67,7 @@ export function CustomCursor() {
       {/* Dot */}
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 w-3 h-3 bg-gold rounded-full pointer-events-none z-[9999] hidden md:block"
+        className="fixed top-0 left-0 w-3 h-3 bg-charcoal rounded-full pointer-events-none z-[9999] hidden md:block"
         style={{ willChange: "transform" }}
       />
       {/* Ring */}
@@ -77,7 +77,7 @@ export function CustomCursor() {
         style={{
           width: "36px",
           height: "36px",
-          border: "1.5px solid rgba(212,168,83,0.55)",
+          border: "1.5px solid rgba(26,26,26,0.55)",
           transition: "width 0.35s ease, height 0.35s ease, border-color 0.35s ease, opacity 0.35s ease",
           willChange: "transform",
         }}

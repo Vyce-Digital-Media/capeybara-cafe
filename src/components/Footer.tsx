@@ -67,7 +67,7 @@ export function Footer() {
 
       {/* ── Watermark ────────────────────────────────────── */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none">
-        <p className="font-display text-[17vw] text-charcoal/[0.03] leading-none whitespace-nowrap">
+        <p className="font-display text-[17vw] text-charcoal/[0.07] leading-none whitespace-nowrap">
           CapeyBara
         </p>
       </div>

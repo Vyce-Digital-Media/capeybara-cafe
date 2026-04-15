@@ -35,7 +35,7 @@ const SECTION_SUB_STEPS = [
   1, // Home
   1, // Menu
   3, // Our Craft  — 3 slides
-  4, // Signature  — 4 cards
+  1, // Signature  — Internal GSAP smooth scroll
   1, // Gallery
   1, // Testimonials
   1, // Highlights

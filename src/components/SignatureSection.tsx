@@ -1,9 +1,15 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useSpring, useTransform, useMotionValue } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /* ────────────────────────────────────────────────────────────────── */
 const ITEMS = [
@@ -140,127 +146,183 @@ function SignatureCard({
   );
 }
 
+
+
 interface SignatureSectionProps {
-  /** Injected by FullPageScroll — which card is currently in focus (0-based) */
+  // Injected by FullPageScroll but ignored because we handle scroll internally
   subStep?: number;
 }
 
-export function SignatureSection({ subStep = 0 }: SignatureSectionProps) {
-  const active = Math.max(0, Math.min(subStep, ITEMS.length - 1));
+export function SignatureSection(_props: SignatureSectionProps) {
+  const scrollContainerRef = useRef<HTMLElement>(null);
+  const pinTargetRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useGSAP(() => {
+    if (!scrollContainerRef.current || !pinTargetRef.current) return;
+
+    // 1. Initialize local Lenis bound rigidly to this internal section
+    const lenis = new Lenis({
+      wrapper: scrollContainerRef.current,
+      content: pinTargetRef.current,
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      smoothWheel: true,
+      syncTouch: true,
+      touchMultiplier: 2,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // 2. Timeline and Scrub Logic mapped locally to the scrollContainer
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        scroller: scrollContainerRef.current,
+        trigger: pinTargetRef.current,
+        start: "top top",
+        end: `+=${ITEMS.length * 100}%`, // Scrollable area derived from card count
+        pin: true,
+        scrub: 1, 
+        onUpdate: (self) => {
+          const idx = Math.min(ITEMS.length - 1, Math.floor(self.progress * ITEMS.length));
+          if (idx !== activeIndex) {
+            setActiveIndex(idx);
+          }
+        }
+      }
+    });
+
+    // Setup Initial States
+    ITEMS.forEach((_, i) => {
+      gsap.set(`.sig-card-${i}`, {
+        yPercent: i === 0 ? 0 : 120 + i * 40,
+        scale: 1,
+        opacity: i === 0 ? 1 : 0,
+        zIndex: i === 0 ? ITEMS.length : ITEMS.length - i,
+      });
+    });
+
+    // Link states continuously to scroll
+    ITEMS.forEach((_, stepIndex) => {
+      if (stepIndex === 0) return;
+      const label = `step${stepIndex}`;
+
+      // Swap z-index immediately at step threshold
+      tl.set(`.sig-card-${stepIndex}`, { zIndex: ITEMS.length }, label);
+      for (let j = 0; j < stepIndex; j++) {
+        tl.set(`.sig-card-${j}`, { zIndex: ITEMS.length + (j - stepIndex) }, label);
+      }
+
+      // Recede past cards
+      for (let j = 0; j < stepIndex; j++) {
+        const dist = j - stepIndex; 
+        tl.to(`.sig-card-${j}`, {
+          yPercent: dist * 18,
+          scale: 1 + dist * 0.04,
+          opacity: Math.max(0.25, 1 + dist * 0.25),
+          duration: 1,
+          ease: "power1.inOut"
+        }, label);
+      }
+
+      // Draw incoming new card
+      tl.to(`.sig-card-${stepIndex}`, {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power1.inOut"
+      }, label);
+    });
+
+    return () => {
+      gsap.ticker.remove((time) => { lenis.raf(time * 1000); });
+      lenis.destroy();
+    };
+  }, { scope: scrollContainerRef });
 
   return (
     <section
+      ref={scrollContainerRef}
       id="menu"
-      className="h-full w-full bg-ivory flex flex-col overflow-hidden border-y border-charcoal/[0.05] relative"
+      className="signature-local-scroll w-full h-screen overflow-y-auto overflow-x-hidden snap-none bg-ivory border-y border-charcoal/[0.05]"
     >
-      {/* ── Watermark (Behind Titles) ────────────────────── */}
-      <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none">
-        <p className="font-display text-[22vw] text-charcoal/[0.03] leading-none whitespace-nowrap">
-          CapeyBara
-        </p>
-      </div>
-      {/* ── Title ─────────────────────────────────────────────── */}
-      <div className="flex-shrink-0 pt-14 pb-6 flex flex-col items-center text-center px-6">
-        <motion.p
-          className="text-gold text-[10px] tracking-[0.5em] uppercase font-body mb-3 mt-22"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          Crafted for You
-        </motion.p>
-        <motion.h2
-          className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-tight"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75 }}
-        >
-          Signature <em className="text-gold-light">Creations</em>
-        </motion.h2>
-
-        {/* Step indicator dots under title */}
-        <div className="flex items-center gap-2 mt-5">
-          {ITEMS.map((_, i) => (
-            <span
-              key={i}
-              className="rounded-full transition-all duration-500"
-              style={{
-                width: i === active ? 24 : 8,
-                height: 6,
-                backgroundColor:
-                  i === active
-                    ? "rgba(212,168,83,1)"
-                    : i < active
-                      ? "rgba(212,168,83,0.45)"
-                      : "rgba(212,168,83,0.18)",
-                transitionTimingFunction: "cubic-bezier(0.34,1.56,0.64,1)",
-              }}
-            />
-          ))}
+      <div ref={pinTargetRef} className="pin-target relative w-full h-screen flex flex-col justify-between overflow-hidden">
+        {/* ── Watermark (Behind Titles) ────────────────────── */}
+        <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none z-0">
+          <p className="font-display text-[22vw] text-charcoal/[0.07] leading-none whitespace-nowrap">
+            CapeyBara
+          </p>
         </div>
-      </div>
 
-      {/* ── Stacking card deck ────────────────────────────────── */}
-      <div className="flex-1 relative overflow-hidden flex items-center justify-center">
-        {ITEMS.map((item, i) => {
-          // Distance from the active card
-          const dist = i - active;
+        {/* ── Title ─────────────────────────────────────────────── */}
+        <div className="flex-shrink-0 pt-14 pb-6 flex flex-col items-center text-center px-6 z-10 relative">
+          <motion.p
+            className="text-gold text-[10px] tracking-[0.5em] uppercase font-body mb-3 mt-22"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Crafted for You
+          </motion.p>
+          <motion.h2
+            className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-tight"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.75 }}
+          >
+            Signature <em className="text-gold-light">Creations</em>
+          </motion.h2>
 
-          // Cards above active (already scrolled past): stack up, shrink, fade
-          // Active card: centered, full size
-          // Cards below active (not yet reached): hidden below viewport
-          let translateY: number;
-          let scale: number;
-          let opacity: number;
-          let zIndex: number;
+          {/* Step indicator dots under title */}
+          <div className="flex items-center gap-2 mt-5">
+            {ITEMS.map((_, i) => (
+              <span
+                key={i}
+                className="rounded-full transition-all duration-500"
+                style={{
+                  width: i === activeIndex ? 24 : 8,
+                  height: 6,
+                  backgroundColor:
+                    i === activeIndex
+                      ? "rgba(26,26,26,1)"
+                      : i < activeIndex
+                        ? "rgba(26,26,26,0.45)"
+                        : "rgba(26,26,26,0.18)",
+                  transitionTimingFunction: "cubic-bezier(0.34,1.56,0.64,1)",
+                }}
+              />
+            ))}
+          </div>
+        </div>
 
-          if (dist < 0) {
-            // Past cards — stack up behind the active card
-            translateY = dist * 18;         // each card 18px higher than the one below
-            scale = 1 + dist * 0.04;        // slightly smaller as you go back
-            opacity = 1 + dist * 0.25;      // fade as stacked further back (min ~0.25)
-            zIndex = ITEMS.length + dist;
-          } else if (dist === 0) {
-            // Active card
-            translateY = 0;
-            scale = 1;
-            opacity = 1;
-            zIndex = ITEMS.length;
-          } else {
-            // Future cards — below the fold
-            translateY = 120 + dist * 40;   // below visible area
-            scale = 1;
-            opacity = 0;
-            zIndex = ITEMS.length - dist;
-          }
-
-          return (
+        {/* ── Stacking card deck ────────────────────────────────── */}
+        <div className="flex-1 relative overflow-hidden flex items-center justify-center z-10">
+          {ITEMS.map((item, i) => (
             <div
               key={item.num}
-              className="absolute w-full"
-              style={{
-                transform: `translateY(${translateY}%) scale(${scale})`,
-                opacity: Math.max(0, opacity),
-                zIndex,
-                transition: "transform 0.75s cubic-bezier(0.76,0,0.24,1), opacity 0.75s cubic-bezier(0.76,0,0.24,1), scale 0.75s cubic-bezier(0.76,0,0.24,1)",
-              }}
+              className={`sig-card-${i} absolute w-full pointer-events-auto`}
             >
-              <SignatureCard item={item} index={i} isActive={i === active} />
+              <SignatureCard item={item} index={i} isActive={i === activeIndex} />
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
 
-      {/* ── CTA ───────────────────────────────────────────────── */}
-      <div className="flex-shrink-0 pb-10 flex justify-center">
-        <Link
-          href="/#"
-          id="sig-full-menu-cta"
-          className="group relative overflow-hidden border border-charcoal/10 hover:border-gold bg-white text-charcoal text-[10px] tracking-[0.28em] uppercase px-10 py-4 rounded-full font-body transition-all duration-300 hover:scale-105 hover:bg-gold hover:text-white shadow-[0_10px_20px_rgba(0,0,0,0.05)]"
-        >
-          <span className="relative z-10 font-bold">Explore Full Menu</span>
-          <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-[-25deg]" />
-        </Link>
+        {/* ── CTA ───────────────────────────────────────────────── */}
+        <div className="flex-shrink-0 pb-10 flex justify-center z-10 relative">
+          <Link
+            href="/#"
+            id="sig-full-menu-cta"
+            className="group relative overflow-hidden border border-charcoal/10 hover:border-gold bg-white text-charcoal text-[10px] tracking-[0.28em] uppercase px-10 py-4 rounded-full font-body transition-all duration-300 hover:scale-105 hover:bg-gold hover:text-white shadow-[0_10px_20px_rgba(0,0,0,0.05)]"
+          >
+            <span className="relative z-10 font-bold">Explore Full Menu</span>
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-[-25deg]" />
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -49,7 +49,7 @@ export function GalleryTeaser() {
     let raf: number;
     const drift = () => {
       if (!isDragging.current) {
-        setOffset(offsetRef.current - 0.5);
+        setOffset(offsetRef.current - 2.5);
       }
       raf = requestAnimationFrame(drift);
     };
@@ -89,7 +89,7 @@ export function GalleryTeaser() {
     <section className="relative bg-ivory py-20 md:py-28 overflow-hidden h-screen">
       {/* ── Watermark (Behind Title) ─────────────────────── */}
       <div className="absolute top-0 left-0 right-0 h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden pointer-events-none select-none">
-        <p className="font-display text-[22vw] text-charcoal/[0.03] leading-none whitespace-nowrap">
+        <p className="font-display text-[22vw] text-charcoal/[0.07] leading-none whitespace-nowrap">
           CapeyBara
         </p>
       </div>
