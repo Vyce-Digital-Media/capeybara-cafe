@@ -10,11 +10,11 @@ import { SignatureSection } from "@/components/SignatureSection";
 import { GalleryTeaser } from "@/components/GalleryTeaser";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { StatsStrip } from "@/components/MarqueeStrip";
-import { VisitCTA } from "@/components/VisitCTA";
 import { Footer } from "@/components/Footer";
 import { CustomCursor } from "@/components/CustomCursor";
 import { FullPageScroll } from "@/components/FullPageScroll";
 import { motion, AnimatePresence } from "framer-motion";
+import { VisitCTA } from "@/components/VisitCTA";
 
 // ── Section metadata ─────────────────────────────────────────────
 const SECTION_LABELS = [
@@ -25,7 +25,6 @@ const SECTION_LABELS = [
   "Gallery",
   "Testimonials",
   "Highlights",
-  "Visit Us",
   "Footer",
 ];
 
@@ -39,7 +38,6 @@ const SECTION_SUB_STEPS = [
   1, // Gallery
   1, // Testimonials
   1, // Highlights
-  1, // Visit Us
   1, // Footer
 ];
 
@@ -97,10 +95,9 @@ export default function Home() {
             {/* 07 — Stats Strip */}
             <StatsStrip />
 
-            {/* 08 — Visit CTA */}
             <VisitCTA />
 
-            {/* 09 — Footer */}
+            {/* 08 — Footer */}
             <Footer />
           </FullPageScroll>
         </motion.div>

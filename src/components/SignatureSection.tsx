@@ -94,8 +94,8 @@ function SignatureCard({
           }}
         />
 
-        {/* Hover reveal image */}
-        <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100 pointer-events-none overflow-hidden rounded-[28px]">
+        {/* Reveal image on Hover OR Active Card state */}
+        <div className={`absolute inset-0 z-0 transition-opacity duration-700 pointer-events-none overflow-hidden rounded-[28px] ${isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
           <Image
             src={item.img}
             alt={item.name}
@@ -103,7 +103,7 @@ function SignatureCard({
             className="object-cover transition-transform duration-[1.5s] ease-out scale-110 group-hover:scale-100"
             sizes="900px"
           />
-          <div className="absolute inset-0 bg-charcoal/80" />
+          <div className={`absolute inset-0 bg-charcoal/80 transition-opacity duration-700 ${isActive ? "opacity-60" : "opacity-80"}`} />
         </div>
 
         {/* Sweeping light */}
