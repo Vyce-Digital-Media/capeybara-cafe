@@ -26,6 +26,7 @@ export function HeroSection() {
           className="object-cover object-center"
           sizes="100vw"
           priority
+          quality={50}
         />
         {/* Left-to-right cream fade so text on the left stays readable */}
         <div className="absolute inset-0 bg-gradient-to-r from-ivory/90 via-ivory/20 to-transparent" />

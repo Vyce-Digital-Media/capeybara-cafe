@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
 import { useGSAP } from "@gsap/react";
+import Image from "next/image";
 
 gsap.registerPlugin(TextPlugin);
 
@@ -126,12 +127,15 @@ export function IntroAnimation({ onComplete }: Props) {
         <div ref={logoRef} className="mb-10 relative opacity-0">
           {/* Back light glow orb */}
           <div className="hidden md:block absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-64 h-64 bg-gold/20 blur-[60px] rounded-full pointer-events-none" />
-          <img
+          <Image
             ref={imgRef}
             src="/logo.jpg"
             alt="CapeyBara"
+            width={176}
+            height={176}
+            priority
             onLoad={() => setImageLoaded(true)}
-            className="relative z-10 w-36 h-36 md:w-44 md:h-44 rounded-full border border-gold/30 shadow-[0_0_80px_rgba(212,168,83,0.3)]"
+            className="relative z-10 w-36 h-36 md:w-44 md:h-44 rounded-full border border-gold/30 shadow-[0_0_80px_rgba(212,168,83,0.3)] object-cover"
           />
         </div>
 

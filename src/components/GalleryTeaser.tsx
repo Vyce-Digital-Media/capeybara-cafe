@@ -2,7 +2,36 @@
 
 import { useRef, useEffect, useCallback, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import Image from "next/image";
+
+function GalleryVideo({ src, isHov, isVisible }: { src: string; isHov: boolean; isVisible: boolean }) {
+  const vidRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (isVisible) {
+      vidRef.current?.play().catch(() => {});
+    } else {
+      vidRef.current?.pause();
+    }
+  }, [isVisible]);
+
+  return (
+    <video
+      ref={vidRef}
+      src={src}
+      loop
+      muted
+      playsInline
+      preload="metadata"
+      className="w-full h-full object-cover pointer-events-none"
+      style={{
+        transform: isHov ? "scale(1.08)" : "scale(1)",
+        transition: "transform 0.6s ease",
+      }}
+    />
+  );
+}
 
 const GALLERY_ITEMS = [
   { src: "/1.jpg", alt: "Coffee flat-lay", type: "image" },
@@ -26,6 +55,8 @@ const GALLERY_ITEMS = [
 ];
 
 export function GalleryTeaser() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { amount: 0.2 });
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
   const isDragging = useRef(false);
@@ -97,7 +128,7 @@ export function GalleryTeaser() {
   };
 
   return (
-    <section className="relative bg-ivory py-20 md:py-28 overflow-hidden h-screen">
+    <section ref={sectionRef} className="relative bg-ivory py-20 md:py-28 overflow-hidden h-screen">
       {/* Header */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
         <div>
@@ -165,25 +196,16 @@ export function GalleryTeaser() {
                 onMouseLeave={() => setHoveredIdx(null)}
               >
                 {item.type === "video" ? (
-                  <video
-                    src={item.src}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover pointer-events-none"
-                    style={{
-                      transform: isHov ? "scale(1.08)" : "scale(1)",
-                      transition: "transform 0.6s ease",
-                    }}
-                  />
+                  <GalleryVideo src={item.src} isHov={isHov} isVisible={isInView} />
                 ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={item.src}
                     alt={item.alt}
+                    fill
+                    sizes="(max-width: 768px) 220px, 220px"
+                    loading="lazy"
                     draggable="false"
-                    className="w-full h-full object-cover pointer-events-none"
+                    className="object-cover pointer-events-none"
                     style={{
                       transform: isHov ? "scale(1.08)" : "scale(1)",
                       transition: "transform 0.6s ease",

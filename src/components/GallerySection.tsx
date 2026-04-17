@@ -9,6 +9,24 @@ import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
+function GalleryItemVideo({ src }: { src: string }) {
+  const vidRef = useRef<HTMLVideoElement>(null);
+  return (
+    <video
+      ref={vidRef}
+      src={src}
+      loop
+      muted
+      playsInline
+      preload="none"
+      onMouseEnter={() => vidRef.current?.play().catch(() => {})}
+      onMouseLeave={() => vidRef.current?.pause()}
+      className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-108"
+      style={{ transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+    />
+  );
+}
+
 const IMAGES = [
   {
     id: 1,
@@ -137,15 +155,7 @@ export function GallerySection() {
               className={`group relative overflow-hidden rounded-sm bg-cream-dark ${i === 0 ? "row-span-2" : ""}`}
             >
               {img.type === "video" ? (
-                <video
-                  src={img.src}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-108"
-                  style={{ transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
-                />
+                <GalleryItemVideo src={img.src} />
               ) : (
                 <Image
                   src={img.src}
