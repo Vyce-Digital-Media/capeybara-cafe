@@ -229,11 +229,13 @@ export function FullPageScroll({
             transition: "transform 850ms cubic-bezier(0.76,0,0.24,1)",
           }}
         >
-          {/* Inject subStep into the child component */}
+          {/* Inject subStep into the child component only if it is a custom component */}
           {isValidElement(section)
-            ? cloneElement(section as React.ReactElement<{ subStep?: number }>, {
-                subStep: subIndexes[i],
-              })
+            ? typeof section.type === "string"
+              ? section
+              : cloneElement(section as React.ReactElement<{ subStep?: number }>, {
+                  subStep: subIndexes[i],
+                })
             : section}
         </div>
       ))}

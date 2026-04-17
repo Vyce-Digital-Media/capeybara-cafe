@@ -80,7 +80,7 @@ export function Footer() {
         </p>
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-center w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20 mt-8 md:mt-0">
+      <div className="relative z-10 flex-1 flex flex-col justify-center w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20 mt-8 md:mt-16">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between w-full gap-16 lg:gap-8">
 
           {/* ── Left Column: Brand block ─────────────────────────── */}
