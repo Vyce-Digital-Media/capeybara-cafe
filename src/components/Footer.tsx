@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -68,7 +69,7 @@ export function Footer() {
   }, { scope: footerRef });
 
   return (
-    <footer ref={footerRef} className="relative bg-ivory overflow-hidden h-full flex flex-col justify-center">
+    <footer ref={footerRef} className="relative bg-ivory overflow-hidden h-full flex flex-col justify-center mt-16 md:mt-0">
 
       {/* ── Animated gold top border ─────────────────────── */}
       <div ref={goldLineRef} className="absolute top-0 left-0 right-0 h-px bg-gold origin-center shrink-0 z-20" />
@@ -80,8 +81,8 @@ export function Footer() {
         </p>
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-center w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20 mt-8 md:mt-16">
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between w-full gap-16 lg:gap-8">
+      <div className="relative z-10 flex-1 flex flex-col justify-center w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20 max-md:py-4 mt-8 md:mt-16 max-md:mt-0">
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-between max-md:justify-center w-full gap-16 lg:gap-8 max-md:gap-6">
 
           {/* ── Left Column: Brand block ─────────────────────────── */}
           <motion.div
@@ -91,13 +92,17 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <img
-              src="/logo.jpg"
-              alt="CapeyBara"
-              className="w-16 h-16 rounded-full mb-4 border border-gold/30 drop-shadow-[0_0_20px_rgba(212,168,83,0.35)]"
-            />
-            <p className="font-display text-charcoal text-3xl mb-1">CapeyBara</p>
-            <p className="font-body text-gold text-[10px] tracking-[0.35em] uppercase mb-4">
+            <div className="relative w-16 h-16 rounded-full mb-4 border border-gold/30 drop-shadow-[0_0_20px_rgba(212,168,83,0.35)] overflow-hidden ">
+              <Image
+                src="/logo.jpg"
+                alt="CapeyBara"
+                fill
+                sizes="64px"
+                className="object-cover"
+              />
+            </div>
+            <p className="font-display text-charcoal text-3xl mb-1 max-md:text-2xl">CapeyBara</p>
+            <p className="font-body text-gold text-[10px] tracking-[0.35em] uppercase mb-4 max-md:mb-2">
               Café · Coffee · More
             </p>
             <p className="font-body text-stone text-sm leading-relaxed max-w-[260px]">
@@ -113,7 +118,7 @@ export function Footer() {
           </motion.div>
 
           {/* ── Center Column: Nav links ───────────────────── */}
-          <div className="flex flex-row justify-center gap-12 sm:gap-24 w-full md:w-auto shrink-0 mt-4 md:mt-0">
+          <div className="flex flex-row justify-center gap-12 sm:gap-24 w-full md:w-auto shrink-0 mt-4 md:mt-0 max-md:mt-2">
             {/* Explore */}
             <motion.div
               className="flex flex-col items-center md:items-start gap-4 min-w-[120px]"
@@ -176,16 +181,16 @@ export function Footer() {
 
           {/* ── Right Column: Newsletter ──────────────────────── */}
           <motion.div
-            className="flex flex-col items-center md:items-start text-center md:text-left shrink-0 md:w-[30%] md:pl-8 mt-8 md:mt-0"
+            className="flex flex-col items-center md:items-start text-center md:text-left shrink-0 md:w-[30%] md:pl-8 mt-8 md:mt-0 max-md:mt-4"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.7 }}
           >
-            <h2 className="font-display font-light text-charcoal text-4xl mb-4">
+            <h2 className="font-display font-light text-charcoal text-4xl mb-4 max-md:text-3xl max-md:mb-2">
               Stay <em className="text-gold">Updated.</em>
             </h2>
-            <p className="font-body text-stone text-sm leading-relaxed mb-6">
+            <p className="font-body text-stone text-sm leading-relaxed mb-6 max-md:mb-4 max-md:text-xs">
               Subscribe to our newsletter for exclusive blends, special offers, and café news.
             </p>
 

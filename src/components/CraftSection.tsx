@@ -44,7 +44,7 @@ export function CraftSection({ subStep = 0 }: CraftSectionProps) {
   return (
     <div
       id="craft"
-      className="relative h-full min-h-[700px] w-full bg-charcoal overflow-hidden flex flex-col md:flex-row shadow-2xl"
+      className="relative h-full min-h-[700px] max-md:min-h-[500px] w-full bg-charcoal overflow-hidden flex flex-col md:flex-row shadow-2xl"
     >
       {/* ── BACKGROUND IMAGES (right side) ──────────────────────── */}
       <div className="absolute inset-0 md:left-1/2 overflow-hidden z-0 bg-charcoal">
@@ -127,7 +127,7 @@ export function CraftSection({ subStep = 0 }: CraftSectionProps) {
                   </span>
                 </div>
 
-                <h3 className="font-display text-[2.75rem] sm:text-5xl lg:text-[4rem] text-white mb-6 leading-[1.1] tracking-tight whitespace-pre-line drop-shadow-xl h-fit">
+                <h3 className="font-display text-[2.75rem] max-md:text-[2rem] sm:text-5xl lg:text-[4rem] text-white mb-6 leading-[1.1] tracking-tight whitespace-pre-line drop-shadow-xl h-fit">
                   {step.title}
                 </h3>
 
@@ -149,7 +149,7 @@ export function CraftSection({ subStep = 0 }: CraftSectionProps) {
             return (
               <span
                 key={`num-${i}`}
-                className="absolute bottom-0 right-0 font-display text-[8rem] sm:text-[10rem] md:text-[12rem] lg:text-[14rem] leading-none text-ivory drop-shadow-lg"
+                className="absolute bottom-0 right-0 font-display text-[8rem] max-md:text-[6rem] sm:text-[10rem] md:text-[12rem] lg:text-[14rem] leading-none text-ivory drop-shadow-lg"
                 style={{
                   opacity: isActive ? 0.05 : 0,
                   transform: `translateY(${isActive ? 0 : 40}px)`,

@@ -40,9 +40,9 @@ export function StorySection() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="relative bg-ivory py-28 md:py-40 overflow-hidden">
+    <section ref={sectionRef} className="relative bg-ivory py-28 md:py-40 max-md:py-16 overflow-hidden">
       {/* Watermark */}
-      <div className="absolute top-0 right-0 text-[18vw] font-display text-black/[0.02] leading-none select-none pointer-events-none pr-6 -translate-y-8">
+      <div className="absolute top-0 right-0 text-[18vw] max-md:text-[28vw] max-md:translate-y-4 font-display text-black/[0.02] leading-none select-none pointer-events-none pr-6 -translate-y-8">
         Story
       </div>
 
@@ -65,7 +65,7 @@ export function StorySection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Image */}
-          <motion.div className="relative h-[460px] md:h-[580px] overflow-hidden rounded-sm"
+          <motion.div className="relative h-[460px] md:h-[580px] max-md:h-[300px] overflow-hidden rounded-sm"
             initial={{ opacity: 0, x: -55 }} whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }} transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}>
             <div ref={imageRef} className="absolute inset-0 scale-110">
@@ -81,7 +81,7 @@ export function StorySection() {
 
           {/* Text */}
           <div className="relative">
-            <motion.h2 className="font-display text-5xl md:text-6xl text-charcoal leading-tight tracking-tight mb-8"
+            <motion.h2 className="font-display text-5xl md:text-6xl max-md:text-4xl text-charcoal leading-tight tracking-tight mb-8 max-md:mb-6"
               initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.85 }}>
               A Story Brewed

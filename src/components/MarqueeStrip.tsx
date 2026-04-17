@@ -95,13 +95,12 @@ function StatCard({ stat, index }: { stat: typeof STATS[0]; index: number }) {
 
         {/* Counter */}
         <div className="relative z-10">
-          <p className="font-display leading-none mb-1 md:mb-2 transition-colors duration-500 group-hover:text-gold"
-            style={{ fontSize: "clamp(3rem, 5vw, 7rem)", color: "inherit" }}
+          <p className="font-display leading-none mb-1 md:mb-2 transition-colors duration-500 group-hover:text-gold max-md:text-5xl md:text-[clamp(3rem,5vw,7rem)] max-md:!text-inherit md:!text-inherit"
           >
             <span ref={spanRef} className="tabular-nums text-charcoal group-hover:text-gold transition-colors duration-500">
               0
             </span>
-            <span className="text-gold" style={{ fontSize: "clamp(1.5rem, 2.5vw, 4.5rem)" }}>
+            <span className="text-gold max-md:text-3xl md:text-[clamp(1.5rem,2.5vw,4.5rem)]">
               {stat.suffix}
             </span>
           </p>
@@ -158,8 +157,7 @@ export function StatsStrip() {
             By The Numbers
           </motion.p>
           <motion.h2
-            className="font-display font-light text-charcoal tracking-tight leading-none"
-            style={{ fontSize: "clamp(2.5rem, 4vw, 4.5rem)" }}
+            className="font-display font-light text-charcoal tracking-tight leading-none max-md:text-3xl md:text-[clamp(2.5rem,4vw,4.5rem)]"
             initial={{ opacity: 0, y: 30 }}
             animate={titleInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.15 }}

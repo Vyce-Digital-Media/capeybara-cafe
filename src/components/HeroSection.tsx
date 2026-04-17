@@ -48,13 +48,12 @@ export function HeroSection() {
       <div className="pointer-events-none absolute -left-[5%] top-1/3 h-[400px] w-[400px] rounded-full bg-gold/10 blur-[120px] z-[2]" />
 
       {/* ── Left text block ───────────────────────────────── */}
-      <div className="absolute top-0 left-0 mt-12 h-full flex flex-col justify-center px-10 md:px-16 lg:px-24 z-10 w-full md:w-[60%] lg:w-[52%]">
+      <div className="absolute top-0 left-0 mt-12 h-full flex flex-col justify-center px-10 md:px-16 lg:px-24 z-10 w-full md:w-[60%] lg:w-[52%] max-md:mt-0 max-md:px-6">
 
 
         {/* Main headline — big editorial serif */}
         <motion.h1
-          className="font-display font-light text-charcoal leading-[0.92] tracking-tight mb-8"
-          style={{ fontSize: "clamp(3.5rem, 7vw, 6.5rem)" }}
+          className="font-display font-light text-charcoal leading-[0.92] tracking-tight mb-8 max-md:text-5xl md:text-[clamp(3.5rem,7vw,6.5rem)] text-[3.5rem]"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
@@ -82,7 +81,7 @@ export function HeroSection() {
 
         {/* CTAs */}
         <motion.div
-          className="flex flex-wrap items-center gap-4"
+          className="flex flex-wrap items-center gap-4 max-md:flex-col max-md:items-start"
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.95, duration: 0.8 }}

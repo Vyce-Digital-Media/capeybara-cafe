@@ -87,7 +87,7 @@ export function GalleryCTA() {
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center flex flex-col items-center w-full bg-white/40 backdrop-blur-xl border border-white/60 p-10 md:p-20 rounded-[3rem] shadow-[0_20px_60px_rgba(0,0,0,0.03)]"
+          className="text-center flex flex-col items-center w-full bg-white/40 backdrop-blur-xl border border-white/60 p-10 md:p-20 max-md:p-6 rounded-[3rem] shadow-[0_20px_60px_rgba(0,0,0,0.03)]"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.9 }}
@@ -99,7 +99,7 @@ export function GalleryCTA() {
             Experience It Live
           </motion.span>
 
-          <h2 className="font-display text-5xl md:text-7xl lg:text-[5.5rem] font-light tracking-tight mb-8 leading-[1.1] text-charcoal">
+          <h2 className="font-display text-5xl md:text-7xl lg:text-[5.5rem] max-md:text-4xl font-light tracking-tight mb-8 leading-[1.1] text-charcoal">
             Step into our <br />
             <span className="italic text-charcoal/70 pr-4">sanctuary.</span>
           </h2>

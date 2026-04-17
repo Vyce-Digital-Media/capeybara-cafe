@@ -188,8 +188,7 @@ export function TestimonialsSection() {
         {/* Section header */}
         <div ref={titleRef} className="text-center mb-6 px-6 relative z-10 pt-12 md:pt-30">
           <motion.h2
-            className="font-display font-light text-charcoal leading-none tracking-tight"
-            style={{ fontSize: "clamp(2.4rem, 4vw, 3.5rem)" }}
+            className="font-display font-light text-charcoal leading-none tracking-tight max-md:text-[2rem] md:text-[clamp(2.4rem,4vw,3.5rem)]"
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.1 }}

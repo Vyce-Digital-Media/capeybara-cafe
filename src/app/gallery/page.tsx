@@ -46,14 +46,14 @@ export default function GalleryPage() {
             {/* Background Watermark Strips */}
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-[0.03] flex flex-col justify-between py-10 -rotate-6 scale-150 mix-blend-overlay">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className={`whitespace-nowrap font-display text-[15rem] leading-none text-white ${i % 2 === 0 ? 'animate-marquee-slow' : 'animate-marquee-slow-reverse'}`}>
+                <div key={i} className={`whitespace-nowrap font-display text-[15rem] max-md:text-[8rem] leading-none text-white ${i % 2 === 0 ? 'animate-marquee-slow' : 'animate-marquee-slow-reverse'}`}>
                   CAPEYBARA CAPEYBARA CAPEYBARA CAPEYBARA CAPEYBARA CAPEYBARA
                 </div>
               ))}
             </div>
 
             {/* Header Overlay - Z-Index 50, White Text, Top Left */}
-            <div className="absolute top-36 left-6 md:left-12 z-50 pointer-events-none">
+            <div className="absolute top-36 left-6 md:left-12 max-md:top-24 max-md:left-4 max-md:right-4 z-50 pointer-events-none">
               <div className="bg-black/20 backdrop-blur-md px-6 py-5 rounded-2xl border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.8)]">
                 <p className="text-gold text-[10px] tracking-[0.5em] uppercase font-body mb-3 font-semibold drop-shadow-md">Visual Stories</p>
                 <h1 className="font-display font-medium text-white text-4xl md:text-6xl leading-none tracking-tight mb-3 drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">

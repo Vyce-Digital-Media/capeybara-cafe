@@ -82,7 +82,7 @@ function SignatureCard({
     >
       <motion.div
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="group relative overflow-hidden rounded-[28px] border border-charcoal/5 bg-cream p-10 md:p-16 min-h-[240px] md:min-h-[280px] transition-all duration-700 hover:border-gold/30 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] flex items-center justify-center"
+        className="group relative overflow-hidden rounded-[28px] border border-charcoal/5 bg-cream p-10 md:p-16 max-md:p-6 min-h-[240px] md:min-h-[280px] max-md:min-h-[180px] transition-all duration-700 hover:border-gold/30 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] flex items-center justify-center"
       >
         <div className="absolute -inset-[20%] z-0 bg-gradient-to-br from-cream to-ivory pointer-events-none transition-opacity duration-700 group-hover:opacity-0" />
 
@@ -115,11 +115,11 @@ function SignatureCard({
 
         <div className="sig-content relative z-10 flex flex-col md:flex-row gap-6 w-full items-center justify-between">
           <div className="flex flex-col items-start gap-3 flex-1">
-            <span className={`font-display font-black text-[5rem] leading-none transition-colors duration-700 md:text-[6rem] absolute -top-4 -left-4 md:top-2 md:left-2 select-none ${isActive ? "text-white/[0.06]" : "text-charcoal/[0.04] group-hover:text-white/[0.06]"}`}>
+            <span className={`font-display font-black text-[5rem] max-md:text-[3.5rem] leading-none transition-colors duration-700 md:text-[6rem] absolute -top-4 -left-4 md:top-2 md:left-2 select-none ${isActive ? "text-white/[0.06]" : "text-charcoal/[0.04] group-hover:text-white/[0.06]"}`}>
               {item.num}
             </span>
-            <div className="flex items-center gap-3 mt-10 md:mt-0 relative z-10">
-              <h3 className={`font-display text-3xl md:text-4xl tracking-tight transition-colors duration-700 ${isActive ? "text-ivory" : "text-charcoal group-hover:text-ivory"}`}>
+            <div className="flex items-center gap-3 mt-10 md:mt-0 relative z-10 max-md:mt-6">
+              <h3 className={`font-display text-3xl md:text-4xl max-md:text-2xl tracking-tight transition-colors duration-700 ${isActive ? "text-ivory" : "text-charcoal group-hover:text-ivory"}`}>
                 {item.name}
               </h3>
               {item.tag && (
@@ -135,8 +135,8 @@ function SignatureCard({
 
           <div className={`w-full md:w-px md:h-20 bg-gradient-to-b from-transparent transition-colors duration-700 my-3 md:my-0 md:mx-6 ${isActive ? "via-white/20" : "via-black/10 group-hover:via-white/20"} to-transparent`} />
 
-          <div className="flex flex-col items-center justify-center min-w-[130px]">
-            <span className={`font-display text-4xl md:text-5xl text-gold transition-all duration-500 origin-center ${isActive ? "scale-110 drop-shadow-[0_0_15px_rgba(212,168,83,0.4)]" : "group-hover:scale-110 drop-shadow-[0_0_15px_rgba(212,168,83,0)] group-hover:drop-shadow-[0_0_15px_rgba(212,168,83,0.4)]"}`}>
+          <div className="flex flex-col items-center justify-center min-w-[130px] max-md:min-w-[0] max-md:w-full max-md:items-start max-md:mt-2">
+            <span className={`font-display text-4xl md:text-5xl max-md:text-3xl text-gold transition-all duration-500 origin-center ${isActive ? "scale-110 max-md:scale-100 drop-shadow-[0_0_15px_rgba(212,168,83,0.4)]" : "group-hover:scale-110 max-md:group-hover:scale-100 drop-shadow-[0_0_15px_rgba(212,168,83,0)] group-hover:drop-shadow-[0_0_15px_rgba(212,168,83,0.4)]"}`}>
               {item.price}
             </span>
           </div>
@@ -285,7 +285,7 @@ export function SignatureSection(_props: SignatureSectionProps) {
             Crafted for You
           </motion.p>
           <motion.h2
-            className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-tight"
+            className="font-display text-4xl md:text-6xl max-md:text-3xl text-charcoal tracking-tight leading-tight"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

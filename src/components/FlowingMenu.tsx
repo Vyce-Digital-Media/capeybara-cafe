@@ -155,7 +155,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
       style={{ borderTop: isFirst ? 'none' : `1px solid ${borderColor}` }}
     >
       <a
-        className="flex items-center justify-center h-[18vh] md:h-[22vh] relative cursor-pointer no-underline font-display font-light text-[6vh] tracking-tight hover:text-gold transition-colors duration-500"
+        className="flex items-center justify-center h-[18vh] md:h-[22vh] max-md:h-[12vh] relative cursor-pointer no-underline font-display font-light text-[6vh] max-md:text-[4vh] tracking-tight hover:text-gold transition-colors duration-500"
         href={link}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -171,9 +171,9 @@ const MenuItem: React.FC<MenuItemProps> = ({
         <div className="h-full w-fit flex" ref={marqueeInnerRef}>
           {[...Array(repetitions)].map((_, idx) => (
             <div className="marquee-part flex items-center flex-shrink-0" key={idx} style={{ color: marqueeTextColor }}>
-              <span className="whitespace-nowrap uppercase font-display font-medium tracking-wide text-[5vh] leading-[1] px-[4vw]">{text}</span>
+              <span className="whitespace-nowrap uppercase font-display font-medium tracking-wide text-[5vh] max-md:text-[3vh] leading-[1] px-[4vw]">{text}</span>
               <div
-                className="w-[250px] h-[12vh] my-[2em] mx-[1vw] bg-cover bg-center"
+                className="w-[250px] max-md:w-[150px] h-[12vh] max-md:h-[8vh] my-[2em] mx-[1vw] bg-cover bg-center"
                 style={{ backgroundImage: `url(${image})`, borderRadius: '100px' }}
               />
             </div>

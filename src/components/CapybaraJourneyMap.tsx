@@ -27,6 +27,7 @@ const WAYPOINTS = [
     rotation: 0,
     cardAlign: "left",
     cardWidth: "w-[320px] md:w-[480px]",
+    mobileM: "max-md:-ml-[160px]",
   },
   {
     id: 1,
@@ -40,6 +41,7 @@ const WAYPOINTS = [
     rotation: 20,
     cardAlign: "right",
     cardWidth: "w-[300px] md:w-[420px]",
+    mobileM: "max-md:-ml-[150px]",
   },
   {
     id: 2,
@@ -53,6 +55,7 @@ const WAYPOINTS = [
     rotation: 45,
     cardAlign: "left",
     cardWidth: "w-[300px] md:w-[420px]",
+    mobileM: "max-md:-ml-[150px]",
   },
   {
     id: 3,
@@ -66,6 +69,7 @@ const WAYPOINTS = [
     rotation: 15,
     cardAlign: "right",
     cardWidth: "w-[300px] md:w-[420px]",
+    mobileM: "max-md:-ml-[150px]",
   },
 ];
 
@@ -235,7 +239,7 @@ export function CapybaraJourneyMap({ subStep = 0 }: CapybaraJourneyMapProps) {
                         scale: { duration: 0.4, type: "spring" },
                         y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
                       }}
-                      className={`absolute top-1/2 -translate-y-1/2 ${wp.cardAlign === "left"
+                      className={`absolute top-1/2 -translate-y-1/2 max-md:top-[calc(50%+50px)] max-md:translate-y-0 max-md:left-[50%] ${wp.mobileM} max-md:right-auto max-md:origin-top ${wp.cardAlign === "left"
                           ? "right-[calc(50%+60px)] origin-right"
                           : "left-[calc(50%+60px)] origin-left"
                         } ${wp.cardWidth} bg-white/80 backdrop-blur-xl border border-white shadow-2xl rounded-2xl overflow-hidden flex flex-col pointer-events-auto z-50`}
@@ -280,13 +284,13 @@ export function CapybaraJourneyMap({ subStep = 0 }: CapybaraJourneyMapProps) {
 
             {/* Massive Watermarks */}
             <div className="absolute left-[80vw] top-[70vh] -translate-x-1/2 pointer-events-none select-none origin-center rotate-12">
-              <p className="font-display text-[22vw] text-[#8B5E3C]/[0.03] leading-none">
+              <p className="font-display text-[22vw] max-md:text-[45vw] text-[#8B5E3C]/[0.03] leading-none">
                 CAPEYBARA
               </p>
             </div>
 
             <div className="absolute left-[290vw] top-[260vh] -translate-x-1/2 pointer-events-none select-none origin-bottom-left -rotate-6">
-              <p className="font-display text-[25vw] text-[#C9A96E]/5 leading-none">
+              <p className="font-display text-[25vw] max-md:text-[50vw] text-[#C9A96E]/5 leading-none">
                 CAFE
               </p>
             </div>
@@ -326,7 +330,7 @@ export function CapybaraJourneyMap({ subStep = 0 }: CapybaraJourneyMapProps) {
               <p className="font-body text-[10px] tracking-[0.5em] uppercase text-[#C9A96E] mb-4">
                 — Reality Check
               </p>
-              <h2 className="font-display font-light text-white text-6xl md:text-8xl leading-none">
+              <h2 className="font-display font-light text-white text-6xl max-md:text-5xl md:text-8xl leading-none">
                 Here we <em className="text-[#C9A96E]">are.</em>
               </h2>
               <p className="text-white/60 font-body text-base mt-6 max-w-sm">
@@ -336,18 +340,18 @@ export function CapybaraJourneyMap({ subStep = 0 }: CapybaraJourneyMapProps) {
               </p>
             </div>
 
-            <div className="mt-12 flex flex-wrap gap-4 opacity-0 translate-y-8">
+            <div className="mt-12 flex flex-wrap max-md:flex-col gap-4 opacity-0 translate-y-8">
               <a
                 href="https://maps.google.com/?q=Vesu+Main+Road+Surat+Gujarat"
                 target="_blank"
                 rel="noreferrer"
-                className="font-body text-[11px] tracking-[0.25em] uppercase px-8 py-4 rounded-full bg-[#C9A96E] text-white hover:bg-white hover:text-[#1a1a1a] transition-colors duration-300 shadow-[0_0_40px_rgba(201,169,110,0.3)]"
+                className="max-md:w-full max-md:text-center font-body text-[11px] tracking-[0.25em] uppercase px-8 py-4 rounded-full bg-[#C9A96E] text-white hover:bg-white hover:text-[#1a1a1a] transition-colors duration-300 shadow-[0_0_40px_rgba(201,169,110,0.3)]"
               >
                 Open Google Maps
               </a>
               <a
                 href="tel:+919876543210"
-                className="font-body text-[11px] tracking-[0.25em] uppercase px-8 py-4 rounded-full border border-white/20 text-white hover:border-[#C9A96E] hover:bg-[#C9A96E]/10 transition-colors duration-300"
+                className="max-md:w-full max-md:text-center font-body text-[11px] tracking-[0.25em] uppercase px-8 py-4 rounded-full border border-white/20 text-white hover:border-[#C9A96E] hover:bg-[#C9A96E]/10 transition-colors duration-300"
               >
                 Call Us Now
               </a>

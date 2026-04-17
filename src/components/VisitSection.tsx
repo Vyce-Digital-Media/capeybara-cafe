@@ -33,8 +33,8 @@ export function VisitSection() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} id="visit" className="bg-cream py-28 md:py-40 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+    <section ref={sectionRef} id="visit" className="bg-cream py-28 md:py-40 max-md:py-16 overflow-hidden">
+      <div className="max-md:px-4 max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
 
           {/* ── Left: info ───────────────────────────────── */}
@@ -50,7 +50,7 @@ export function VisitSection() {
             </motion.p>
 
             <motion.h2
-              className="font-display text-5xl md:text-6xl text-charcoal tracking-tight leading-tight mb-14"
+              className="font-display text-5xl md:text-6xl max-md:text-4xl text-charcoal tracking-tight leading-tight mb-14 max-md:mb-8"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

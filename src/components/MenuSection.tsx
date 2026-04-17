@@ -38,8 +38,8 @@ const ITEMS = [
 
 export function MenuSection() {
   return (
-    <section id="menu" className="bg-cream py-28 md:py-40 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+    <section id="menu" className="bg-cream py-28 md:py-40 max-md:py-16 overflow-hidden">
+      <div className="max-md:px-4 max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -54,7 +54,7 @@ export function MenuSection() {
               Crafted for You
             </motion.p>
             <motion.h2
-              className="font-display text-5xl md:text-6xl text-charcoal leading-tight tracking-tight"
+              className="font-display text-5xl md:text-6xl max-md:text-4xl text-charcoal leading-tight tracking-tight"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

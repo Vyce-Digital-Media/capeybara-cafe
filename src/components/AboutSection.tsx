@@ -60,9 +60,9 @@ export function AboutSection() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} id="about" className="relative bg-ivory py-28 md:py-40 overflow-hidden">
+    <section ref={sectionRef} id="about" className="relative bg-ivory py-28 md:py-40 max-md:py-16 overflow-hidden">
       {/* Decorative watermark */}
-      <div className="absolute top-0 right-0 text-[18vw] font-display text-charcoal-dark/50 leading-none select-none pointer-events-none pr-6 -translate-y-8">
+      <div className="absolute top-0 right-0 text-[18vw] max-md:text-[28vw] max-md:translate-y-4 font-display text-charcoal-dark/50 leading-none select-none pointer-events-none pr-6 -translate-y-8">
         Story
       </div>
 
@@ -85,7 +85,7 @@ export function AboutSection() {
 
           {/* ── Left: image ─────────────────────────────── */}
           <motion.div
-            className="relative h-[480px] md:h-[620px] overflow-hidden rounded-sm"
+            className="relative h-[480px] md:h-[620px] max-md:h-[320px] overflow-hidden rounded-sm"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -106,7 +106,7 @@ export function AboutSection() {
           {/* ── Right: text ──────────────────────────────── */}
           <div className="flex flex-col justify-center">
             <motion.h2
-              className="font-display text-5xl md:text-6xl text-charcoal leading-tight tracking-tight mb-10"
+              className="font-display text-5xl md:text-6xl max-md:text-4xl text-charcoal leading-tight tracking-tight mb-10 max-md:mb-6"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

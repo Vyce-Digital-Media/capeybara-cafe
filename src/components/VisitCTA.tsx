@@ -54,8 +54,7 @@ export function VisitCTA() {
           <div>
 
             <motion.h2
-              className="font-display font-light text-charcoal leading-[0.9] tracking-tight mb-4 md:mb-8 md:mt-24"
-              style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
+              className="font-display font-light text-charcoal leading-[0.9] tracking-tight mb-4 md:mb-8 md:mt-24 max-md:text-4xl md:text-[clamp(2.5rem,6vw,5.5rem)]"
               initial={{ opacity: 0, y: 44 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.15, duration: 0.9 }}
