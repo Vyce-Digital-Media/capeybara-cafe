@@ -14,15 +14,18 @@ export const metadata: Metadata = {
 };
 
 const PHOTOS = [
-  { src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=900&q=85", alt: "Coffee flat-lay", tall: true },
-  { src: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=900&q=85", alt: "Cafe interior", tall: false },
-  { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=85", alt: "Artisan desserts", tall: false },
-  { src: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=900&q=85", alt: "Barista at work", tall: true },
-  { src: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=900&q=85", alt: "Fresh pastries", tall: false },
-  { src: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=900&q=85", alt: "Coffee beans", tall: false },
-  { src: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900&q=85", alt: "Espresso shot", tall: false },
-  { src: "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?w=900&q=85", alt: "Latte art", tall: false },
-  { src: "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=900&q=85", alt: "Matcha", tall: true },
+  { src: "/1.jpg", alt: "Gallery Image 1" },
+  { src: "/2.jpg", alt: "Gallery Image 2" },
+  { src: "/3.jpg", alt: "Gallery Image 3" },
+  { src: "/4.jpg", alt: "Gallery Image 4" },
+  { src: "/5.jpg", alt: "Gallery Image 5" },
+  { src: "/6.jpg", alt: "Gallery Image 6" },
+  { src: "/7.jpg", alt: "Gallery Image 7" },
+  { src: "/8.jpg", alt: "Gallery Image 8" },
+  { src: "/9.jpg", alt: "Gallery Image 9" },
+  { src: "/10.jpg", alt: "Gallery Image 10" },
+  { src: "/11.jpg", alt: "Gallery Image 11" },
+  { src: "/12.jpg", alt: "Gallery Image 12" },
 ];
 
 const SECTION_LABELS = ["Gallery", "Connect", "Footer"];
