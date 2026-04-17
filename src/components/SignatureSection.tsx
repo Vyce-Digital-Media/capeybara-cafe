@@ -115,11 +115,11 @@ function SignatureCard({
 
         <div className="sig-content relative z-10 flex flex-col md:flex-row gap-6 w-full items-center justify-between">
           <div className="flex flex-col items-start gap-3 flex-1">
-            <span className="font-display font-black text-[5rem] leading-none text-charcoal/[0.04] group-hover:text-white/[0.06] transition-colors duration-700 md:text-[6rem] absolute -top-4 -left-4 md:top-2 md:left-2 select-none">
+            <span className={`font-display font-black text-[5rem] leading-none transition-colors duration-700 md:text-[6rem] absolute -top-4 -left-4 md:top-2 md:left-2 select-none ${isActive ? "text-white/[0.06]" : "text-charcoal/[0.04] group-hover:text-white/[0.06]"}`}>
               {item.num}
             </span>
             <div className="flex items-center gap-3 mt-10 md:mt-0 relative z-10">
-              <h3 className="font-display text-3xl md:text-4xl text-charcoal tracking-tight group-hover:text-ivory transition-colors duration-700">
+              <h3 className={`font-display text-3xl md:text-4xl tracking-tight transition-colors duration-700 ${isActive ? "text-ivory" : "text-charcoal group-hover:text-ivory"}`}>
                 {item.name}
               </h3>
               {item.tag && (
@@ -128,15 +128,15 @@ function SignatureCard({
                 </span>
               )}
             </div>
-            <p className="font-body text-stone text-sm leading-relaxed max-w-md relative z-10 group-hover:text-ivory/80 transition-colors duration-700">
+            <p className={`font-body text-sm leading-relaxed max-w-md relative z-10 transition-colors duration-700 ${isActive ? "text-ivory/80" : "text-stone group-hover:text-ivory/80"}`}>
               {item.desc}
             </p>
           </div>
 
-          <div className="w-full md:w-px md:h-20 bg-gradient-to-b from-transparent via-black/10 group-hover:via-white/20 to-transparent transition-colors duration-700 my-3 md:my-0 md:mx-6" />
+          <div className={`w-full md:w-px md:h-20 bg-gradient-to-b from-transparent transition-colors duration-700 my-3 md:my-0 md:mx-6 ${isActive ? "via-white/20" : "via-black/10 group-hover:via-white/20"} to-transparent`} />
 
           <div className="flex flex-col items-center justify-center min-w-[130px]">
-            <span className="font-display text-4xl md:text-5xl text-gold group-hover:scale-110 transition-transform duration-500 origin-center drop-shadow-[0_0_15px_rgba(212,168,83,0)] group-hover:drop-shadow-[0_0_15px_rgba(212,168,83,0.4)]">
+            <span className={`font-display text-4xl md:text-5xl text-gold transition-all duration-500 origin-center ${isActive ? "scale-110 drop-shadow-[0_0_15px_rgba(212,168,83,0.4)]" : "group-hover:scale-110 drop-shadow-[0_0_15px_rgba(212,168,83,0)] group-hover:drop-shadow-[0_0_15px_rgba(212,168,83,0.4)]"}`}>
               {item.price}
             </span>
           </div>

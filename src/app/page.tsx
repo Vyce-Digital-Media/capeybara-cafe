@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { IntroAnimation } from "@/components/IntroAnimation";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
@@ -43,17 +43,15 @@ const SECTION_SUB_STEPS = [
 
 export default function Home() {
   const [introComplete, setIntroComplete] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
-    const alreadySeen = sessionStorage.getItem("introSeen") === "true";
-    if (alreadySeen) setIntroComplete(true);
-    sessionStorage.removeItem("introSeen");
+    setHasStarted(true);
   }, []);
 
-  const handleIntroComplete = () => {
-    sessionStorage.setItem("introSeen", "true");
+  const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
-  };
+  }, []);
 
   return (
     <>
