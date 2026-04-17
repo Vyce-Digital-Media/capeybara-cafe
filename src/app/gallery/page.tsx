@@ -67,19 +67,17 @@ export default function GalleryPage() {
 
             {/* Dome Gallery - Full viewport */}
             <div className="absolute inset-0 w-full h-full">
-              <DomeGallery
-                images={PHOTOS}
-                grayscale={false}
-                overlayBlurColor="#0a0a0a"
-                padFactor={0.15}
-                dragSensitivity={15}
-                fit={1.5}
-                minRadius={1500}
-                imageBorderRadius="16px"
-                openedImageBorderRadius="24px"
-                openedImageWidth={undefined}
-                openedImageHeight={undefined}
-              />
+            <DomeGallery
+              images={PHOTOS}
+              grayscale={false}
+              overlayBlurColor="#0a0a0a"
+              padFactor={0.15}
+              dragSensitivity={15}
+              fit={1.5}
+              minRadius={1500}
+              imageBorderRadius="16px"
+              openedImageBorderRadius="24px"
+            />
             </div>
           </main>
 
