@@ -66,11 +66,15 @@ export function FullPageScroll({
     [total, isAnimating]
   );
 
-  /** Lock scroll for the animation duration + a small buffer */
+  /** Lock scroll for the animation duration + a small buffer to clear inertia */
   const lockScroll = useCallback(() => {
     scrollLocked.current = true;
-    // Unlock slightly after the animation finishes so the next gesture works
-    setTimeout(() => { scrollLocked.current = false; }, 1050);
+    accumDelta.current = 0;
+    // Unlock later to fully swallow lingering touchpad inertia
+    setTimeout(() => {
+      scrollLocked.current = false;
+      accumDelta.current = 0;
+    }, 1500);
   }, []);
 
   /* ── Scroll-down logic ──────────────────────────────────────────── */
