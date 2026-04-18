@@ -81,9 +81,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ subStep = 0 }: HeroSectionProps) {
   const imgRef = useRef<HTMLDivElement>(null);
-  const nextImgRef = useRef<HTMLImageElement | null>(null); // tracks preloaded img element
   const bobTlRef = useRef<gsap.core.Timeline | null>(null);
-  const animatingRef = useRef(false);
   const prevSubStepRef = useRef<number>(-1);
 
   const [mounted, setMounted] = useState(false);
@@ -91,6 +89,12 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  /* ── Kill all active animations on the image element ── */
+  const killAll = useCallback(() => {
+    if (bobTlRef.current) { bobTlRef.current.kill(); bobTlRef.current = null; }
+    if (imgRef.current) gsap.killTweensOf(imgRef.current);
   }, []);
 
   /* ── Infinite gentle bob ── */
@@ -106,41 +110,26 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
     });
   }, []);
 
-  /* ── Helper: wait for an image src to be decoded, then call cb ── */
-  const waitForImage = useCallback(
-    (src: string, cb: () => void) => {
-      // If the browser already has it cached, HTMLImageElement.decode() is instant
-      const img = new window.Image();
-      img.src = src;
-      nextImgRef.current = img;
-      if (img.complete && img.naturalWidth > 0) {
-        cb();
-      } else {
-        img.onload = cb;
-        img.onerror = cb; // don't block on error
-      }
-    },
-    []
-  );
-
   /* ── First mount: entrance animation ── */
   useEffect(() => {
     if (!imgRef.current) return;
     const el = imgRef.current;
 
-    // Start invisible immediately (no layout shift)
+    // Start invisible — no layout shift during SSR → hydration
     gsap.set(el, { y: 80, autoAlpha: 0, scale: 0.94 });
 
-    // Wait for the first image to be ready before revealing
-    waitForImage(ITEMS[0].src, () => {
-      gsap.to(el, {
-        y: 0,
-        autoAlpha: 1,
-        scale: 1,
-        duration: 1.0,
-        delay: 0.35, // shorter — feels snappier
-        ease: "power3.out",
-        onComplete: startBob,
+    // Two rAFs ensure Next.js Image has painted before we reveal
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        gsap.to(el, {
+          y: 0,
+          autoAlpha: 1,
+          scale: 1,
+          duration: 1.0,
+          delay: 0.2,
+          ease: "power3.out",
+          onComplete: startBob,
+        });
       });
     });
 
@@ -155,47 +144,46 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
     prevSubStepRef.current = subStep;
 
     const el = imgRef.current;
-    if (!el || animatingRef.current) return;
-    animatingRef.current = true;
+    if (!el) return;
+
+    // Always kill whatever is running — this is the key fix.
+    // The old guard (animatingRef) blocked rapid-scroll transitions,
+    // leaving displayedIndex stuck on 0 indefinitely.
+    killAll();
 
     const goingForward = subStep > prev;
     const exitY = goingForward ? -130 : 130;
     const enterY = goingForward ? 130 : -130;
 
-    // 1. Kill bob
-    if (bobTlRef.current) {
-      bobTlRef.current.kill();
-      bobTlRef.current = null;
-    }
+    // 1. Capture the target index in a closure so rAF callbacks
+    //    always reference the correct slide even after another scroll.
+    const targetIndex = subStep;
 
-    // 2. Exit current image
+    // 2. Exit: fly current image off-screen
     gsap.to(el, {
       y: exitY,
       autoAlpha: 0,
       scale: 0.85,
-      duration: 0.48,
+      duration: 0.42,
       ease: "power2.in",
       onComplete: () => {
-        // 3. Immediately park element at enter side (invisible)
+        // 3. Park at entrance position (invisible)
         gsap.set(el, { y: enterY, scale: 0.9, autoAlpha: 0 });
 
-        // 4. Swap src via React state — element is invisible, zero blink
-        setDisplayedIndex(subStep);
+        // 4. Swap the React-rendered image src while invisible → zero blink
+        setDisplayedIndex(targetIndex);
 
-        // 5. Wait for the new image to be ready before animating in
-        waitForImage(ITEMS[subStep].src, () => {
-          // One rAF so React has flushed the new src to the DOM
+        // 5. Two rAFs: first lets React commit the new src,
+        //    second waits for the browser to paint it before revealing.
+        requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             gsap.to(el, {
               y: 0,
               autoAlpha: 1,
               scale: 1,
-              duration: 0.65,
+              duration: 0.62,
               ease: "power3.out",
-              onComplete: () => {
-                animatingRef.current = false;
-                startBob();
-              },
+              onComplete: startBob,
             });
           });
         });
