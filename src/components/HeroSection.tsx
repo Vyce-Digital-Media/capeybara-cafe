@@ -389,7 +389,6 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
             }}
           >
             <Image
-              key={displayedIndex}
               src={ITEMS[displayedIndex].src}
               alt={ITEMS[displayedIndex].alt}
               fill
