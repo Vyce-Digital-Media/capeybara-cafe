@@ -193,7 +193,24 @@ export function FullPageScroll({
       if (touchStartY.current === null) return;
       const delta = touchStartY.current - e.changedTouches[0].clientY;
       touchStartY.current = null;
-      if (Math.abs(delta) < 40) return;
+
+      // ── Local Scroll Boundary Check (Mobile) ──
+      const localScroll = (e.target as Element).closest(".signature-local-scroll") as HTMLElement;
+      if (localScroll) {
+        const isScrollingDown = delta > 0;
+        const reachedTop = localScroll.scrollTop <= 0;
+        const reachedBottom =
+          localScroll.scrollTop + localScroll.clientHeight >= localScroll.scrollHeight - 1;
+
+        if ((isScrollingDown && !reachedBottom) || (!isScrollingDown && !reachedTop)) {
+          // Internal cards are still scrolling, let local scroll handle it
+          return;
+        }
+      }
+
+      // ── Main Section Snap Threshold ──
+      if (Math.abs(delta) < 70) return; 
+
       if (delta > 0) handleScrollDown();
       else handleScrollUp();
     };
