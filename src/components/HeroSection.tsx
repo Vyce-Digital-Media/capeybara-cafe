@@ -8,20 +8,14 @@ import Image from "next/image";
 /* ─────────────────────────────────────────────────────────────
    Three hero stages — driven by FullPageScroll's subStep prop
    subStep 0 → Coffee latte   (initial)
-   subStep 1 → Cheesecake     (exits UP → enters BOTTOM)
-   subStep 2 → Matcha drink   (exits UP → enters BOTTOM)
+   subStep 1 → Cheesecake     (old exits UP, new enters BOTTOM)
+   subStep 2 → Matcha drink   (old exits UP, new enters BOTTOM)
 
-   BLINK-FREE STRATEGY:
-   1. All three images are preloaded as hidden <img> tags so the
-      browser has them cached before any transition fires.
-   2. `displayedIndex` only updates AFTER exit completes (element
-      is invisible & off-screen), so the src swap is invisible.
-   3. Entrance animation waits for the new image's `onLoad` before
-      fading in — eliminates the "grey box while loading" flash.
-   4. `mounted` flag suppresses SSR-only decorative elements so
-      hydration never causes a layout shift.
+   KEY FIX: `displayedIndex` tracks what is ACTUALLY on screen.
+   It only updates inside the GSAP onComplete (after exit finishes).
+   This prevents React re-rendering the new image src before the
+   old one has left — eliminating the "blink" entirely.
 ───────────────────────────────────────────────────────────── */
-
 const ITEMS = [
   {
     id: "coffee",
@@ -64,17 +58,6 @@ const ITEMS = [
   },
 ];
 
-/* Precompute orbit positions once — avoids per-render trig calls */
-const ORBIT_DOTS = [0, 72, 144, 216, 288].map((deg, i) => ({
-  deg,
-  i,
-  left: `calc(50% + ${225 * Math.cos((deg * Math.PI) / 180)}px)`,
-  top: `calc(50% + ${225 * Math.sin((deg * Math.PI) / 180)}px)`,
-  size: i % 2 === 0 ? 8 : 5,
-  duration: 2.5 + i * 0.4,
-  delay: i * 0.6,
-}));
-
 interface HeroSectionProps {
   subStep?: number;
 }
@@ -82,19 +65,21 @@ interface HeroSectionProps {
 export function HeroSection({ subStep = 0 }: HeroSectionProps) {
   const imgRef = useRef<HTMLDivElement>(null);
   const bobTlRef = useRef<gsap.core.Timeline | null>(null);
+  const animatingRef = useRef(false); // guard against rapid scroll
   const prevSubStepRef = useRef<number>(-1);
 
   const [mounted, setMounted] = useState(false);
+
+  /*
+   * displayedIndex = which ITEMS entry is currently rendered in the DOM.
+   * This is updated MID-ANIMATION (after exit, before entrance) so the
+   * React re-render (new image src) happens while the element is already
+   * invisible and repositioned — zero blink.
+   */
   const [displayedIndex, setDisplayedIndex] = useState(0);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  /* ── Kill all active animations on the image element ── */
-  const killAll = useCallback(() => {
-    if (bobTlRef.current) { bobTlRef.current.kill(); bobTlRef.current = null; }
-    if (imgRef.current) gsap.killTweensOf(imgRef.current);
   }, []);
 
   /* ── Infinite gentle bob ── */
@@ -113,26 +98,16 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
   /* ── First mount: entrance animation ── */
   useEffect(() => {
     if (!imgRef.current) return;
-    const el = imgRef.current;
-
-    // Start invisible — no layout shift during SSR → hydration
-    gsap.set(el, { y: 80, autoAlpha: 0, scale: 0.94 });
-
-    // Two rAFs ensure Next.js Image has painted before we reveal
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        gsap.to(el, {
-          y: 0,
-          autoAlpha: 1,
-          scale: 1,
-          duration: 1.0,
-          delay: 0.2,
-          ease: "power3.out",
-          onComplete: startBob,
-        });
-      });
+    gsap.set(imgRef.current, { y: 110, autoAlpha: 0, scale: 0.92 });
+    gsap.to(imgRef.current, {
+      y: 0,
+      autoAlpha: 1,
+      scale: 1,
+      duration: 1.1,
+      delay: 1.0,
+      ease: "power3.out",
+      onComplete: startBob,
     });
-
     prevSubStepRef.current = 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -140,50 +115,50 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
   /* ── Transition when subStep changes ── */
   useEffect(() => {
     const prev = prevSubStepRef.current;
+    // Skip initial paint (handled above) and no-op updates
     if (prev === -1 || prev === subStep) return;
     prevSubStepRef.current = subStep;
 
     const el = imgRef.current;
-    if (!el) return;
-
-    // Always kill whatever is running — this is the key fix.
-    // The old guard (animatingRef) blocked rapid-scroll transitions,
-    // leaving displayedIndex stuck on 0 indefinitely.
-    killAll();
+    if (!el || animatingRef.current) return;
+    animatingRef.current = true;
 
     const goingForward = subStep > prev;
-    const exitY = goingForward ? -130 : 130;
-    const enterY = goingForward ? 130 : -130;
+    const exitY = goingForward ? -130 : 130;   // exit direction
+    const enterY = goingForward ? 130 : -130;  // enter from opposite side
 
-    // 1. Capture the target index in a closure so rAF callbacks
-    //    always reference the correct slide even after another scroll.
-    const targetIndex = subStep;
+    // 1. Kill bob so it doesn't fight the exit tween
+    if (bobTlRef.current) { bobTlRef.current.kill(); bobTlRef.current = null; }
 
-    // 2. Exit: fly current image off-screen
+    // 2. Exit: current image flies off screen
     gsap.to(el, {
       y: exitY,
       autoAlpha: 0,
       scale: 0.85,
-      duration: 0.42,
+      duration: 0.5,
       ease: "power2.in",
       onComplete: () => {
-        // 3. Park at entrance position (invisible)
+        // 3. Reposition element to enter-side (still invisible)
+        //    — this happens BEFORE the React state update renders
         gsap.set(el, { y: enterY, scale: 0.9, autoAlpha: 0 });
 
-        // 4. Swap the React-rendered image src while invisible → zero blink
-        setDisplayedIndex(targetIndex);
+        // 4. NOW swap the image src via React state.
+        //    The element is invisible + off-screen → no blink.
+        setDisplayedIndex(subStep);
 
-        // 5. Two rAFs: first lets React commit the new src,
-        //    second waits for the browser to paint it before revealing.
+        // 5. Small rAF delay so React flushes the new src before we animate in
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             gsap.to(el, {
               y: 0,
               autoAlpha: 1,
               scale: 1,
-              duration: 0.62,
+              duration: 0.68,
               ease: "power3.out",
-              onComplete: startBob,
+              onComplete: () => {
+                animatingRef.current = false;
+                startBob();
+              },
             });
           });
         });
@@ -192,7 +167,9 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subStep]);
 
+  /* UI data comes from what's actually DISPLAYED, not from subStep */
   const item = ITEMS[displayedIndex];
+  const isLast = subStep >= ITEMS.length - 1;
 
   return (
     <div
@@ -200,39 +177,26 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
       className="relative h-screen overflow-hidden"
       style={{ backgroundColor: "#fcfbfa" }}
     >
-      {/*
-       * ── Hidden preload images ──────────────────────────────────────
-       * These are positioned off-screen and aria-hidden. They cause the
-       * browser to fetch & decode all three PNGs as quickly as possible
-       * so transitions are blink-free from the very first scroll.
-       */}
-      <div aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", opacity: 0, pointerEvents: "none", zIndex: -1 }}>
-        {ITEMS.map((it) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img key={it.id} src={it.src} alt="" width={1} height={1} />
-        ))}
-      </div>
-
-      {/* ── Background gradient ── */}
+      {/* ── Background gradient — transitions with displayedIndex ── */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 transition-all duration-900"
         style={{
           background: `radial-gradient(ellipse 75% 80% at 72% 50%, ${item.glowStart} 0%, #fcfbfa 58%, #f0ece4 100%)`,
           transition: "background 0.9s ease",
         }}
       />
 
-      {/* Right glow orb — use `will-change: background` isolated layer */}
+      {/* Right glow orb */}
       <div
         className="absolute right-[2%] top-[10%] w-[600px] h-[600px] rounded-full pointer-events-none z-0"
         style={{
           background: `radial-gradient(circle, ${item.glowColor} 0%, transparent 68%)`,
-          filter: "blur(48px)",
+          filter: "blur(60px)",
           transition: "background 0.9s ease",
         }}
       />
 
-      {/* Magazine grid lines — static, rendered once */}
+      {/* Magazine grid lines */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.032] z-[1]">
         {[1, 2, 3, 4, 5].map((i) => (
           <div
@@ -243,55 +207,55 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
         ))}
       </div>
 
-      {/* Left gold aura — static colour, no transition needed */}
+      {/* Left gold aura */}
       <div
         className="pointer-events-none absolute -left-[6%] top-1/3 h-[420px] w-[420px] rounded-full z-[1]"
         style={{
           background: "radial-gradient(circle, rgba(212,168,83,0.07) 0%, transparent 70%)",
-          filter: "blur(64px)",
+          filter: "blur(80px)",
         }}
       />
 
       {/* ══════════════════════════════════════════════════
-          LEFT: Text Column
+          LEFT: Text (uses subStep for instant responsiveness)
       ══════════════════════════════════════════════════ */}
       <div className="absolute top-0 left-0 h-full flex flex-col justify-center px-10 md:px-30 z-10 w-full md:w-[54%] lg:w-[50%] max-md:px-6">
 
-        {/* Step indicator dots — hidden until hydrated to avoid shift */}
-        <div
-          className="flex items-center gap-3 mb-8"
-          style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.4s ease 0.4s" }}
-          suppressHydrationWarning
-        >
-          <div className="flex items-center gap-2">
-            {ITEMS.map((it, i) => (
-              <div
-                key={it.id}
-                className="rounded-full"
-                style={{
-                  width: i === subStep ? 28 : 8,
-                  height: 8,
-                  backgroundColor:
-                    i <= subStep
-                      ? ITEMS[subStep]?.accentColor ?? it.accentColor
-                      : "#e0d9cf",
-                  boxShadow:
-                    i === subStep
-                      ? `0 0 10px ${ITEMS[subStep]?.accentColor ?? it.accentColor}70`
-                      : "none",
-                  transition:
-                    "width 0.4s ease, background-color 0.5s ease, box-shadow 0.5s ease",
-                }}
-              />
-            ))}
-          </div>
-          <span
-            className="font-body text-[10px] tracking-[0.3em] uppercase"
-            style={{ color: "#8c8880" }}
+        {/* Step indicator dots */}
+        {mounted && (
+          <motion.div
+            className="flex items-center gap-3 mb-8"
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.7 }}
           >
-            {ITEMS[subStep]?.tag ?? "01"} / 03
-          </span>
-        </div>
+            <div className="flex items-center gap-2">
+              {ITEMS.map((it, i) => (
+                <div
+                  key={it.id}
+                  className="rounded-full"
+                  style={{
+                    width: i === subStep ? 28 : 8,
+                    height: 8,
+                    backgroundColor:
+                      i <= subStep ? ITEMS[subStep]?.accentColor ?? it.accentColor : "#e0d9cf",
+                    boxShadow:
+                      i === subStep
+                        ? `0 0 10px ${ITEMS[subStep]?.accentColor ?? it.accentColor}70`
+                        : "none",
+                    transition: "width 0.4s ease, background-color 0.5s ease, box-shadow 0.5s ease",
+                  }}
+                />
+              ))}
+            </div>
+            <span
+              className="font-body text-[10px] tracking-[0.3em] uppercase"
+              style={{ color: "#8c8880" }}
+            >
+              {ITEMS[subStep]?.tag ?? "01"} / 03
+            </span>
+          </motion.div>
+        )}
 
         {/* Headline */}
         <motion.h1
@@ -299,7 +263,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
           style={{ fontSize: "clamp(3.2rem,6.5vw,6rem)" }}
           initial={{ opacity: 0, y: 44 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ delay: 0.5, duration: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           Some places<br />
           serve coffee.<br />
@@ -319,7 +283,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.45 }}
           >
             {item.description}
           </motion.p>
@@ -330,7 +294,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
           className="flex flex-wrap items-center gap-4 max-md:flex-col max-md:items-start"
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75, duration: 0.8 }}
+          transition={{ delay: 0.95, duration: 0.8 }}
         >
           <a
             href="https://drive.google.com/file/d/1_OMH4MZ6QWK_n1wl7evbGFPbVhBI27DH/view?fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnLfptwr8uBu3xebhfjYSlux0xbXEHSvIUT3BlPnZDxcGaNnSGiYq0Q_gJCWY_aem__9OcuIgoTxLE3wkyKqSLzA"
@@ -341,8 +305,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
             style={{
               backgroundColor: item.accentColor,
               boxShadow: `0 8px 28px ${item.accentColor}40`,
-              transition:
-                "background-color 0.7s ease, box-shadow 0.7s ease, transform 0.3s ease",
+              transition: "background-color 0.7s ease, box-shadow 0.7s ease, transform 0.3s ease",
             }}
           >
             <span className="relative z-10 font-semibold">View Menu</span>
@@ -368,39 +331,33 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
       ══════════════════════════════════════════════════ */}
       <div className="absolute right-0 top-0 h-full w-[52%] max-md:w-full max-md:opacity-20 flex items-center justify-center z-[6] pointer-events-none overflow-hidden">
 
-        {/* Spinning rings — suppress on SSR to avoid hydration mismatch */}
-        <div
-          suppressHydrationWarning
-          style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.6s ease" }}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        >
-          {mounted && (
-            <>
-              <motion.div
-                className="absolute rounded-full border border-dashed pointer-events-none"
-                style={{
-                  width: 530,
-                  height: 530,
-                  borderColor: `${item.accentColor}28`,
-                  transition: "border-color 0.8s ease",
-                }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.div
-                className="absolute rounded-full border border-dotted pointer-events-none"
-                style={{
-                  width: 650,
-                  height: 650,
-                  borderColor: `${item.accentColor}14`,
-                  transition: "border-color 0.8s ease",
-                }}
-                animate={{ rotate: -360 }}
-                transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
-              />
-            </>
-          )}
-        </div>
+        {/* Spinning rings — colour transitions with displayedIndex */}
+        {mounted && (
+          <motion.div
+            className="absolute rounded-full border border-dashed pointer-events-none"
+            style={{
+              width: 530,
+              height: 530,
+              borderColor: `${item.accentColor}28`,
+              transition: "border-color 0.8s ease",
+            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+          />
+        )}
+        {mounted && (
+          <motion.div
+            className="absolute rounded-full border border-dotted pointer-events-none"
+            style={{
+              width: 650,
+              height: 650,
+              borderColor: `${item.accentColor}14`,
+              transition: "border-color 0.8s ease",
+            }}
+            animate={{ rotate: -360 }}
+            transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
+          />
+        )}
 
         {/* Glow disc */}
         <div
@@ -409,18 +366,19 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
             width: 420,
             height: 420,
             background: `radial-gradient(circle, ${item.glowColor} 0%, transparent 70%)`,
-            filter: "blur(36px)",
+            filter: "blur(40px)",
             transition: "background 0.9s ease",
           }}
         />
 
-        {/* ── Floating image container ── GSAP animates transform/opacity only ── */}
+        {/* ── Floating image container — GSAP moves this, React swaps src ONLY
+                while it's invisible (displayedIndex gates the src render) ── */}
         <div
           ref={imgRef}
           className="flex flex-col items-center gap-5"
-          style={{ willChange: "transform" }}
+          style={{ willChange: "transform, opacity" }}
         >
-          {/* Main product image */}
+          {/* The image — src bound to displayedIndex (never changes while visible) */}
           <div
             className="relative"
             style={{
@@ -437,12 +395,11 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
               className="object-contain"
               priority
               sizes="(min-width: 1280px) 540px, (min-width: 768px) 38vw, 360px"
-              quality={90}
-              placeholder="empty"
+              quality={95}
             />
           </div>
 
-          {/* Label badge */}
+          {/* Label badge — also driven by displayedIndex */}
           <span
             className="font-body text-[11px] font-medium tracking-[0.3em] uppercase px-6 py-2.5 rounded-full"
             style={{
@@ -451,32 +408,35 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
               backgroundColor: item.badgeBg,
               backdropFilter: "blur(12px)",
               boxShadow: `0 4px 20px ${item.accentColor}18`,
-              transition:
-                "color 0.7s ease, border-color 0.7s ease, background-color 0.7s ease, box-shadow 0.7s ease",
+              transition: "color 0.7s ease, border-color 0.7s ease, background-color 0.7s ease, box-shadow 0.7s ease",
             }}
           >
             ✦ {item.label} ✦
           </span>
         </div>
 
-        {/* Orbit dots — SSR-safe */}
-        {mounted &&
-          ORBIT_DOTS.map(({ i, left, top, size, duration, delay }) => (
-            <motion.div
-              key={`orb-${i}`}
-              className="absolute rounded-full"
-              style={{
-                width: size,
-                height: size,
-                backgroundColor: item.accentColor,
-                left,
-                top,
-                transition: "background-color 0.8s ease",
-              }}
-              animate={{ scale: [1, 1.7, 1], opacity: [0.2, 0.55, 0.2] }}
-              transition={{ duration, delay, repeat: Infinity, ease: "easeInOut" }}
-            />
-          ))}
+        {/* Orbit dots */}
+        {mounted && [0, 72, 144, 216, 288].map((deg, i) => (
+          <motion.div
+            key={`orb-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: i % 2 === 0 ? 8 : 5,
+              height: i % 2 === 0 ? 8 : 5,
+              backgroundColor: item.accentColor,
+              left: `calc(50% + ${225 * Math.cos((deg * Math.PI) / 180)}px)`,
+              top: `calc(50% + ${225 * Math.sin((deg * Math.PI) / 180)}px)`,
+              transition: "background-color 0.8s ease",
+            }}
+            animate={{ scale: [1, 1.7, 1], opacity: [0.2, 0.55, 0.2] }}
+            transition={{
+              duration: 2.5 + i * 0.4,
+              delay: i * 0.6,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </div>
     </div>
   );
