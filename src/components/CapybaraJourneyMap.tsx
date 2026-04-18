@@ -198,16 +198,46 @@ export function CapybaraJourneyMap({ subStep = 0 }: CapybaraJourneyMapProps) {
             {/* The Trail Line (SVG connecting waypoints via pure CSS curves) */}
             <svg
               className="absolute top-0 left-0 w-full h-full pointer-events-none"
-              overflow="visible"
+              viewBox="0 0 400 400"
+              preserveAspectRatio="none"
             >
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#C9A96E" />
+                </marker>
+              </defs>
               <path
-                d="M 50vw 50vh C 100vw 50vh, 100vw 100vh, 150vw 100vh S 200vw 100vh, 260vw 200vh S 300vw 250vh, 320vw 300vh"
+                d="M 50 50 C 100 50, 100 100, 150 100"
                 fill="none"
                 stroke="#C9A96E"
+                vectorEffect="non-scaling-stroke"
                 strokeWidth="4"
                 strokeDasharray="20 20"
                 strokeLinecap="round"
-                className="opacity-40"
+                className="opacity-70 animate-dash-flow"
+                markerEnd="url(#arrow)"
+              />
+              <path
+                d="M 150 100 C 205 100, 205 200, 260 200"
+                fill="none"
+                stroke="#C9A96E"
+                vectorEffect="non-scaling-stroke"
+                strokeWidth="4"
+                strokeDasharray="20 20"
+                strokeLinecap="round"
+                className="opacity-70 animate-dash-flow"
+                markerEnd="url(#arrow)"
+              />
+              <path
+                d="M 260 200 C 290 200, 290 300, 320 300"
+                fill="none"
+                stroke="#C9A96E"
+                vectorEffect="non-scaling-stroke"
+                strokeWidth="4"
+                strokeDasharray="20 20"
+                strokeLinecap="round"
+                className="opacity-70 animate-dash-flow"
+                markerEnd="url(#arrow)"
               />
             </svg>
 
@@ -240,8 +270,8 @@ export function CapybaraJourneyMap({ subStep = 0 }: CapybaraJourneyMapProps) {
                         y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
                       }}
                       className={`absolute top-1/2 -translate-y-1/2 max-md:top-[calc(50%+50px)] max-md:translate-y-0 max-md:left-[50%] ${wp.mobileM} max-md:right-auto max-md:origin-top ${wp.cardAlign === "left"
-                          ? "right-[calc(50%+60px)] origin-right"
-                          : "left-[calc(50%+60px)] origin-left"
+                        ? "right-[calc(50%+60px)] origin-right"
+                        : "left-[calc(50%+60px)] origin-left"
                         } ${wp.cardWidth} bg-white/80 backdrop-blur-xl border border-white shadow-2xl rounded-2xl overflow-hidden flex flex-col pointer-events-auto z-50`}
                     >
                       {/* Image block */}

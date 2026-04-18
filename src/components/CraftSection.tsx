@@ -88,7 +88,7 @@ export function CraftSection({ subStep = 0 }: CraftSectionProps) {
       <div className="absolute inset-0 md:w-1/2 flex flex-col justify-center px-8 sm:px-12 md:px-16 lg:px-24 z-10 pointer-events-none">
 
         {/* Header */}
-        <div className="absolute top-10 left-8 sm:left-12 md:top-16 md:left-16 lg:left-24">
+        <div className="absolute top-28 left-8 sm:left-12 md:top-16 md:left-16 lg:left-24">
           <p className="font-body text-[9px] text-gold tracking-[0.45em] uppercase mb-4 drop-shadow-md">
             How We Do It
           </p>
