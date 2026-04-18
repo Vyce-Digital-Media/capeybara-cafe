@@ -150,7 +150,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
   const Content = (
     <div
-      className="flex items-center justify-center h-[18vh] md:h-[22vh] max-md:h-[12vh] relative cursor-default no-underline font-display font-light text-[6vh] max-md:text-[4vh] tracking-tight transition-colors duration-500"
+      className="flex items-center justify-center h-full relative cursor-default no-underline font-display font-light text-[6vh] max-md:text-[4vh] tracking-tight transition-colors duration-500"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ color: textColor }}
@@ -179,10 +179,10 @@ const MenuItem: React.FC<MenuItemProps> = ({
       >
         <div className="h-full w-fit flex" ref={marqueeInnerRef}>
           {[...Array(repetitions)].map((_, idx) => (
-            <div className="marquee-part flex items-center flex-shrink-0" key={idx} style={{ color: marqueeTextColor }}>
-              <span className="whitespace-nowrap uppercase font-display font-medium tracking-wide text-[5vh] max-md:text-[3vh] leading-[1] px-[4vw]">{text}</span>
+            <div className="marquee-part flex items-center h-full flex-shrink-0" key={idx} style={{ color: marqueeTextColor }}>
+              <span className="whitespace-nowrap uppercase font-display font-medium tracking-wide text-[5vh] max-md:text-[3vh] leading-none px-[4vw]">{text}</span>
               <div
-                className="w-[250px] max-md:w-[150px] h-[12vh] max-md:h-[8vh] my-[2em] mx-[1vw] bg-cover bg-center"
+                className="w-[250px] max-md:w-[150px] h-3/4 my-auto mx-[1vw] bg-cover bg-center"
                 style={{ backgroundImage: `url(${image})`, borderRadius: '100px' }}
               />
             </div>
