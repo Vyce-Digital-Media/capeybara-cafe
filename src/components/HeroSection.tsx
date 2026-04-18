@@ -146,22 +146,20 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
         //    The element is invisible + off-screen → no blink.
         setDisplayedIndex(subStep);
 
-        // 5. Small rAF delay so React flushes the new src before we animate in
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            gsap.to(el, {
-              y: 0,
-              autoAlpha: 1,
-              scale: 1,
-              duration: 0.68,
-              ease: "power3.out",
-              onComplete: () => {
-                animatingRef.current = false;
-                startBob();
-              },
-            });
+        // 5. Short delay so React flushes the DOM before we animate in
+        setTimeout(() => {
+          gsap.to(el, {
+            y: 0,
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.68,
+            ease: "power3.out",
+            onComplete: () => {
+              animatingRef.current = false;
+              startBob();
+            },
           });
-        });
+        }, 50);
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -378,7 +376,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
           className="flex flex-col items-center gap-5"
           style={{ willChange: "transform, opacity" }}
         >
-          {/* The image — src bound to displayedIndex (never changes while visible) */}
+          {/* The images — pre-rendered to prevent blink, visibility bound to displayedIndex */}
           <div
             className="relative"
             style={{
@@ -388,15 +386,23 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
               transition: "filter 0.8s ease",
             }}
           >
-            <Image
-              src={ITEMS[displayedIndex].src}
-              alt={ITEMS[displayedIndex].alt}
-              fill
-              className="object-contain"
-              priority
-              sizes="(min-width: 1280px) 540px, (min-width: 768px) 38vw, 360px"
-              quality={95}
-            />
+            {ITEMS.map((it, idx) => (
+              <Image
+                key={it.id}
+                src={it.src}
+                alt={it.alt}
+                fill
+                className="object-contain"
+                style={{
+                  opacity: idx === displayedIndex ? 1 : 0,
+                  pointerEvents: idx === displayedIndex ? "auto" : "none",
+                  visibility: idx === displayedIndex ? "visible" : "hidden",
+                }}
+                priority
+                sizes="(min-width: 1280px) 540px, (min-width: 768px) 38vw, 360px"
+                quality={95}
+              />
+            ))}
           </div>
 
           {/* Label badge — also driven by displayedIndex */}
