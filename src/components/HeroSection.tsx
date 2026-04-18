@@ -88,7 +88,9 @@ export function HeroSection() {
           transition={{ delay: 0.95, duration: 0.8 }}
         >
           <a
-            href="/#"
+            href="https://drive.google.com/file/d/1_OMH4MZ6QWK_n1wl7evbGFPbVhBI27DH/view?fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnLfptwr8uBu3xebhfjYSlux0xbXEHSvIUT3BlPnZDxcGaNnSGiYq0Q_gJCWY_aem__9OcuIgoTxLE3wkyKqSLzA"
+            target="_blank"
+            rel="noopener noreferrer"
             id="hero-view-menu"
             className="group relative overflow-hidden bg-gold text-white text-[10px] tracking-[0.22em] uppercase px-9 py-4 rounded-full font-body transition-all duration-300 hover:bg-charcoal hover:shadow-lg hover:shadow-charcoal/20 hover:scale-105 active:scale-100"
           >
@@ -96,11 +98,11 @@ export function HeroSection() {
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg]" />
           </a>
           <a
-            href="/#"
+            href="/visit"
             id="hero-our-story"
             className="border border-charcoal/15 hover:border-gold text-charcoal hover:text-gold text-[10px] tracking-[0.22em] uppercase px-9 py-4 rounded-full font-body transition-all duration-300"
           >
-            Our Story →
+            Visit Us →
           </a>
         </motion.div>
       </div>

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 
 interface MenuItemData {
-  link: string;
+  link?: string;
   text: string;
   image: string;
 }
@@ -125,7 +125,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
     };
   }, [text, image, repetitions, speed]);
 
-  const handleMouseEnter = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleMouseEnter = (ev: React.MouseEvent<HTMLElement>) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
     const rect = itemRef.current.getBoundingClientRect();
     const edge = findClosestEdge(ev.clientX - rect.left, ev.clientY - rect.top, rect.width, rect.height);
@@ -137,7 +137,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
       .to([marqueeRef.current, marqueeInnerRef.current], { y: '0%' }, 0);
   };
 
-  const handleMouseLeave = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleMouseLeave = (ev: React.MouseEvent<HTMLElement>) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
     const rect = itemRef.current.getBoundingClientRect();
     const edge = findClosestEdge(ev.clientX - rect.left, ev.clientY - rect.top, rect.width, rect.height);
@@ -148,21 +148,30 @@ const MenuItem: React.FC<MenuItemProps> = ({
       .to(marqueeInnerRef.current, { y: edge === 'top' ? '101%' : '-101%' }, 0);
   };
 
+  const Content = (
+    <div
+      className="flex items-center justify-center h-[18vh] md:h-[22vh] max-md:h-[12vh] relative cursor-default no-underline font-display font-light text-[6vh] max-md:text-[4vh] tracking-tight transition-colors duration-500"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ color: textColor }}
+    >
+      {text}
+    </div>
+  );
+
   return (
     <div
       className="flex-1 relative overflow-hidden text-center"
       ref={itemRef}
       style={{ borderTop: isFirst ? 'none' : `1px solid ${borderColor}` }}
     >
-      <a
-        className="flex items-center justify-center h-[18vh] md:h-[22vh] max-md:h-[12vh] relative cursor-pointer no-underline font-display font-light text-[6vh] max-md:text-[4vh] tracking-tight hover:text-gold transition-colors duration-500"
-        href={link}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{ color: textColor }}
-      >
-        {text}
-      </a>
+      {link ? (
+        <a href={link}>
+          {Content}
+        </a>
+      ) : (
+        Content
+      )}
       <div
         className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none translate-y-[101%] z-20"
         ref={marqueeRef}

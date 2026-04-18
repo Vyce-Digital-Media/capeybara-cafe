@@ -380,7 +380,7 @@ export function CapybaraJourneyMap({ subStep = 0 }: CapybaraJourneyMapProps) {
                 Open Google Maps
               </a>
               <a
-                href="tel:+919876543210"
+                href="tel:+919999999999"
                 className="max-md:w-full max-md:text-center font-body text-[11px] tracking-[0.25em] uppercase px-8 py-4 rounded-full border border-white/20 text-white hover:border-[#C9A96E] hover:bg-[#C9A96E]/10 transition-colors duration-300"
               >
                 Call Us Now

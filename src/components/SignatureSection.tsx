@@ -185,7 +185,7 @@ export function SignatureSection(_props: SignatureSectionProps) {
         start: "top top",
         end: `+=${ITEMS.length * 100}%`, // Scrollable area derived from card count
         pin: true,
-        scrub: 1, 
+        scrub: 1,
         onUpdate: (self) => {
           const idx = Math.min(ITEMS.length - 1, Math.floor(self.progress * ITEMS.length));
           setActiveIndex(prev => prev !== idx ? idx : prev);
@@ -198,7 +198,7 @@ export function SignatureSection(_props: SignatureSectionProps) {
       gsap.set(`.sig-card-${i}`, {
         yPercent: i === 0 ? 0 : 120 + i * 40,
         scale: 1,
-        opacity: 1, 
+        opacity: 1,
         zIndex: i === 0 ? ITEMS.length : ITEMS.length - i,
       });
       // The first card should have text visible, others hidden initially
@@ -220,15 +220,15 @@ export function SignatureSection(_props: SignatureSectionProps) {
 
       // Recede past cards
       for (let j = 0; j < stepIndex; j++) {
-        const dist = j - stepIndex; 
+        const dist = j - stepIndex;
         tl.to(`.sig-card-${j}`, {
           yPercent: dist * 18,
           scale: 1 + dist * 0.04,
-          opacity: 1, 
+          opacity: 1,
           duration: 1,
           ease: "power1.inOut"
         }, label);
-        
+
         // FADE OUT previous text tightly to timeline
         tl.to(`.sig-card-${j} .sig-content`, {
           opacity: 0,
@@ -243,7 +243,7 @@ export function SignatureSection(_props: SignatureSectionProps) {
         duration: 1,
         ease: "power1.inOut"
       }, label);
-      
+
       // Fade in new card's text
       tl.to(`.sig-card-${stepIndex} .sig-content`, {
         opacity: 1,
@@ -330,14 +330,16 @@ export function SignatureSection(_props: SignatureSectionProps) {
 
         {/* ── CTA ───────────────────────────────────────────────── */}
         <div className="flex-shrink-0 pb-10 flex justify-center z-10 relative">
-          <Link
-            href="/#"
+          <a
+            href="https://drive.google.com/file/d/1_OMH4MZ6QWK_n1wl7evbGFPbVhBI27DH/view?fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnLfptwr8uBu3xebhfjYSlux0xbXEHSvIUT3BlPnZDxcGaNnSGiYq0Q_gJCWY_aem__9OcuIgoTxLE3wkyKqSLzA"
+            target="_blank"
+            rel="noopener noreferrer"
             id="sig-full-menu-cta"
             className="group relative overflow-hidden border border-charcoal/10 hover:border-gold bg-white text-charcoal text-[10px] tracking-[0.28em] uppercase px-10 py-4 rounded-full font-body transition-all duration-300 hover:scale-105 hover:bg-gold hover:text-white shadow-[0_10px_20px_rgba(0,0,0,0.05)]"
           >
             <span className="relative z-10 font-bold">Explore Full Menu</span>
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-[-25deg]" />
-          </Link>
+          </a>
         </div>
       </div>
     </section>

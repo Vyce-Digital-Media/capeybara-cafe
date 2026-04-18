@@ -10,7 +10,7 @@ function GalleryVideo({ src, isHov, isVisible }: { src: string; isHov: boolean; 
 
   useEffect(() => {
     if (isVisible) {
-      vidRef.current?.play().catch(() => {});
+      vidRef.current?.play().catch(() => { });
     } else {
       vidRef.current?.pause();
     }
@@ -143,7 +143,7 @@ export function GalleryTeaser() {
           </motion.h2>
         </div>
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          <Link href="/#" id="gallery-teaser-cta"
+          <Link href="/gallery" id="gallery-teaser-cta"
             className="group inline-flex items-center gap-2 font-body text-[10px] tracking-[0.22em] uppercase text-charcoal hover:text-gold border-b border-charcoal/20 hover:border-gold pb-1 transition-all duration-300">
             See All Photos
             <span className="transition-transform duration-300 group-hover:translate-x-2">→</span>

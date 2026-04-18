@@ -11,11 +11,11 @@ import Image from "next/image";
 gsap.registerPlugin(ScrollTrigger);
 
 const EXPLORE = [
-  { label: "Home", href: "#" },
+  { label: "Home", href: "/" },
   { label: "Our Story", href: "#" },
-  { label: "Menu", href: "#" },
-  { label: "Gallery", href: "#" },
-  { label: "Visit Us", href: "#" },
+  { label: "Menu", href: "https://drive.google.com/file/d/1_OMH4MZ6QWK_n1wl7evbGFPbVhBI27DH/view?fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnLfptwr8uBu3xebhfjYSlux0xbXEHSvIUT3BlPnZDxcGaNnSGiYq0Q_gJCWY_aem__9OcuIgoTxLE3wkyKqSLzA" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Visit Us", href: "/visit" },
 ];
 
 const SOCIALS = [
@@ -131,7 +131,12 @@ export function Footer() {
               <ul className="flex flex-col items-center md:items-start gap-3">
                 {EXPLORE.map((l) => (
                   <li key={l.label}>
-                    <SideShiftLink href={l.href} id={`footer-${l.label.toLowerCase().replace(" ", "-")}`}>
+                    <SideShiftLink
+                      href={l.href}
+                      id={`footer-${l.label.toLowerCase().replace(" ", "-")}`}
+                      target={l.href.startsWith("http") ? "_blank" : undefined}
+                      rel={l.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    >
                       {l.label}
                     </SideShiftLink>
                   </li>

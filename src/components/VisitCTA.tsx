@@ -97,7 +97,7 @@ export function VisitCTA() {
               transition={{ delay: 0.7 }}
             >
               <Link
-                href="/#"
+                href="/visit"
                 id="visit-cta-btn"
                 className="group relative overflow-hidden mb-6 md:mb-8 inline-flex items-center gap-2 md:gap-3 bg-charcoal text-ivory text-[9px] md:text-[10px] tracking-[0.28em] uppercase px-8 md:px-12 py-3 md:py-4 rounded-full font-body shadow-[0_10px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.2)] transition-all duration-500 hover:scale-105"
               >
