@@ -69,9 +69,6 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
   const prevSubStepRef = useRef<number>(-1);
 
   const [mounted, setMounted] = useState(false);
-  // Keeps the image wrapper invisible via CSS until GSAP takes control,
-  // preventing the one-frame flash that happens before the entrance tween runs.
-  const [initiallyHidden, setInitiallyHidden] = useState(true);
 
   /*
    * displayedIndex = which ITEMS entry is currently rendered in the DOM.
@@ -101,10 +98,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
   /* ── First mount: entrance animation ── */
   useEffect(() => {
     if (!imgRef.current) return;
-    // Set GSAP state while element is still CSS-hidden (no flash)
     gsap.set(imgRef.current, { y: 110, autoAlpha: 0, scale: 0.92 });
-    // Now reveal the wrapper (GSAP owns opacity from here on)
-    setInitiallyHidden(false);
     gsap.to(imgRef.current, {
       y: 0,
       autoAlpha: 1,
@@ -377,12 +371,23 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
           }}
         />
 
-        {/* ── Preload all hero images so network-load flicker never happens
-                on the cheesecake / matcha transitions ── */}
+        {/* ── Preload cheesecake & matcha so they are cached before the user
+                scrolls — prevents network-load flicker on first transition ── */}
         {ITEMS.slice(1).map((it) => (
-          <div key={it.id} style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none", overflow: "hidden" }}>
-            <Image src={it.src} alt="" fill sizes="1px" />
-          </div>
+          <Image
+            key={it.id}
+            src={it.src}
+            alt=""
+            width={1}
+            height={1}
+            style={{
+              position: "absolute",
+              opacity: 0,
+              pointerEvents: "none",
+              width: "1px",
+              height: "1px",
+            }}
+          />
         ))}
 
         {/* ── Floating image container — GSAP moves this, React swaps src ONLY
@@ -390,12 +395,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
         <div
           ref={imgRef}
           className="flex flex-col items-center gap-5"
-          style={{
-            willChange: "transform, opacity",
-            // CSS-level hide until GSAP sets its own opacity on first mount.
-            // This prevents the one-frame blink before the entrance tween fires.
-            opacity: initiallyHidden ? 0 : undefined,
-          }}
+          style={{ willChange: "transform, opacity" }}
         >
           {/* The image — src bound to displayedIndex (never changes while visible) */}
           <div
