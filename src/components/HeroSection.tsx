@@ -371,25 +371,6 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
           }}
         />
 
-        {/* ── Preload cheesecake & matcha so they are cached before the user
-                scrolls — prevents network-load flicker on first transition ── */}
-        {ITEMS.slice(1).map((it) => (
-          <Image
-            key={it.id}
-            src={it.src}
-            alt=""
-            width={1}
-            height={1}
-            style={{
-              position: "absolute",
-              opacity: 0,
-              pointerEvents: "none",
-              width: "1px",
-              height: "1px",
-            }}
-          />
-        ))}
-
         {/* ── Floating image container — GSAP moves this, React swaps src ONLY
                 while it's invisible (displayedIndex gates the src render) ── */}
         <div
