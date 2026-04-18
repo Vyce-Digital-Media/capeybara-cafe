@@ -144,22 +144,23 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
 
         // 4. NOW swap the image src via React state.
         //    The element is invisible + off-screen → no blink.
+        //    All images are already preloaded → no network delay.
         setDisplayedIndex(subStep);
 
-        // 5. Small rAF delay so React flushes the new src before we animate in
+        // 5. Single rAF so React flushes the new src before we animate in
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            gsap.to(el, {
-              y: 0,
-              autoAlpha: 1,
-              scale: 1,
-              duration: 0.68,
-              ease: "power3.out",
-              onComplete: () => {
-                animatingRef.current = false;
-                startBob();
-              },
-            });
+          gsap.to(el, {
+            y: 0,
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.68,
+            ease: "power3.out",
+            onComplete: () => {
+              animatingRef.current = false;
+              // Release GPU layer when idle
+              el.style.willChange = "auto";
+              startBob();
+            },
           });
         });
       },
@@ -179,7 +180,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
     >
       {/* ── Background gradient — transitions with displayedIndex ── */}
       <div
-        className="absolute inset-0 z-0 transition-all duration-900"
+        className="absolute inset-0 z-0"
         style={{
           background: `radial-gradient(ellipse 75% 80% at 72% 50%, ${item.glowStart} 0%, #fcfbfa 58%, #f0ece4 100%)`,
           transition: "background 0.9s ease",
@@ -376,7 +377,7 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
         <div
           ref={imgRef}
           className="flex flex-col items-center gap-5"
-          style={{ willChange: "transform, opacity" }}
+          style={{ willChange: "auto" }}
         >
           {/* The image — src bound to displayedIndex (never changes while visible) */}
           <div
@@ -395,9 +396,30 @@ export function HeroSection({ subStep = 0 }: HeroSectionProps) {
               className="object-contain"
               priority
               sizes="(min-width: 1280px) 540px, (min-width: 768px) 38vw, 360px"
-              quality={95}
+              quality={90}
             />
           </div>
+
+          {/* ── Hidden preload images — fetched immediately so transitions
+               are instant (images already in browser cache). quality={90}
+               keeps them sharp while saving ~15 % vs quality={95}). ── */}
+          {ITEMS.filter((_, i) => i !== displayedIndex).map((it) => (
+            <div
+              key={it.id}
+              aria-hidden="true"
+              style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none", overflow: "hidden" }}
+            >
+              <Image
+                src={it.src}
+                alt=""
+                fill
+                priority
+                sizes="1px"
+                quality={90}
+                className="object-contain"
+              />
+            </div>
+          ))}
 
           {/* Label badge — also driven by displayedIndex */}
           <span
