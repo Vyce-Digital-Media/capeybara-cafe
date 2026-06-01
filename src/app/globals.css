@@ -22,6 +22,7 @@
 /* ── Dynamic font tokens (set by next/font on <html>) ───── */
 @theme inline {
   --font-display: var(--font-cormorant);
+  --font-tall:    var(--font-playfair);
   --font-body:    var(--font-dm-sans);
   --font-heading:       var(--font-sans);
   --font-sans:       var(--font-sans);
@@ -295,4 +296,8 @@ h1, h2, h3, h4, h5, h6 {
   html {
     @apply font-sans;
   }
+}
+
+@utility font-aboreto {
+  font-family: var(--font-aboreto), cursive;
 }

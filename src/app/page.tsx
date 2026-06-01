@@ -31,7 +31,7 @@ const SECTION_LABELS = [
 // Must match the order of children passed to FullPageScroll below.
 // 1 = single scroll advances immediately; N = N scrolls consumed internally first.
 const SECTION_SUB_STEPS = [
-  3, // Home  — 3 floating-object stages (coffee → cheesecake → matcha)
+  1, // Home  — Premium static hero
   1, // Menu
   3, // Our Craft  — 3 slides
   1, // Signature  — Internal GSAP smooth scroll
